@@ -1,0 +1,21 @@
+server:
+  port: 4444
+spring:
+  application:
+    name: ufire-websocket
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+#server:
+#  port: 8885
+#
+##添加Thymeleaf配置
+#thymeleaf:
+#  cache: false
+#  prefix: classpath:/templates/
+#  suffix: .html
+#  mode: HTML5
+#  encoding: UTF-8
+#  content-type: text/html

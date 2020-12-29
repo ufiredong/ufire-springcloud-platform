@@ -4,6 +4,11 @@ spring:
   application:
     name: ufire-getway
   cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848

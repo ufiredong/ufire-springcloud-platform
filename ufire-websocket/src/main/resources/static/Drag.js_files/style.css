@@ -1,0 +1,136 @@
+* {
+	box-sizing: border-box;
+}
+html {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	font-family: Helvetica, Tahoma, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;
+}
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #ECECEC;
+}
+h1 {
+	font-size: 3em;
+	margin: 20px 0;
+}
+
+::-webkit-scrollbar-track-piece{}
+::-webkit-scrollbar{width: 0;}
+::-webkit-scrollbar-thumb{background: rgba(0, 0, 0, 0);}
+::-webkit-scrollbar-thumb:hover {background: rgba(0, 0, 0, 0.3);}
+
+.contentFrame {
+	position: relative;
+	padding: 40px 40px;
+	width: 100%;
+	max-width: 1800px;
+	margin: 0 auto;
+	background-color: #FFF;
+	box-shadow: 0 0 30px rgba(0, 0, 0, 0.30);
+}
+a {
+	text-decoration: none;
+	color:#666;
+	cursor: pointer;
+}
+a:hover {
+	color:#999;
+}
+p {
+	padding-left: 15px;
+	line-height: 26px;
+}
+.sub {
+	border-left: 5px solid #F06292;
+	padding-left: 10px;
+	line-height: 20px;
+	font-size: 20px;
+}
+.links {
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 10px 0;
+	background-color: #FFF;
+	font-size: 0.75em;
+	text-align: center;
+}
+.section {
+	margin: 20px 0;
+	overflow: hidden;
+}
+.center {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	margin: 0 auto;
+	overflow: hidden;
+}
+.centerItem {
+	flex-grow: 0;
+	flex-shrink: 1;
+	margin: 10px 10px;
+	border: 1px solid #DEDEDE;
+	border-radius: 3px;
+}
+.listContainer {
+	height: 1500px;
+	width: 300px;
+	overflow-y: auto;
+}
+.listItem {
+	width: 100%;
+	cursor: move;
+	background-color: #FFF;
+	border-bottom: 1px solid #DEDEDE;
+	border-left: 5px solid #DEDEDE;
+	padding-left: 15px;
+	height: 100px;
+	line-height: 40px;
+	background-color: #F8F8F8;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	transition: border-left .3s;
+}
+.listItem:hover {
+	border-left: 10px solid #DEDEDE;
+}
+dragcase>.listItem {
+	border-bottom: 0;
+}
+
+.item {
+	cursor: move;
+	text-align: center;
+	background-color: #F8F8F8;
+}
+.item.huge {
+	height: 200px;
+	width: 200px;
+	line-height: 198px;
+}
+.item.big {
+	height: 150px;
+	width: 150px;
+	line-height: 148px;
+}
+.item.small {
+	height: 100px;
+	width: 100px;
+	line-height: 98px;
+}
+.item.tiny {
+	height: 50px;
+	width: 50px;
+	line-height: 48px;
+}

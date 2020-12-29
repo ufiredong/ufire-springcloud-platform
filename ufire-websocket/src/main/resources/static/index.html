@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            font-family: Helvetica, Tahoma, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ECECEC;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        ::-webkit-scrollbar-track-piece {
+        }
+
+        ::-webkit-scrollbar {
+            width: 0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .contentFrame {
+            position: relative;
+            padding: 40px 40px;
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            background-color: #FFF;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.30);
+        }
+
+        a {
+            text-decoration: none;
+            color: #666;
+            cursor: pointer;
+        }
+
+        a:hover {
+            color: #999;
+        }
+
+        p {
+            padding-left: 15px;
+            line-height: 26px;
+        }
+
+        .sub {
+            border-left: 5px solid #F06292;
+            padding-left: 10px;
+            line-height: 20px;
+            font-size: 20px;
+        }
+
+        .links {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            background-color: #FFF;
+            font-size: 0.75em;
+            text-align: center;
+        }
+
+        .section {
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .center {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .centerItem {
+            flex-grow: 0;
+            flex-shrink: 1;
+            margin: 10px 10px;
+            border: 1px solid #DEDEDE;
+            border-radius: 3px;
+        }
+
+        .listContainer {
+            height: 1500px;
+            width: 300px;
+            overflow-y: auto;
+        }
+
+        .listItem {
+            width: 100%;
+            cursor: move;
+            background-color: #FFF;
+            border-bottom: 1px solid #DEDEDE;
+            border-left: 5px solid #DEDEDE;
+            padding-left: 15px;
+            height: 80px;
+            line-height: 40px;
+            background-color: #F8F8F8;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            transition: border-left .3s;
+        }
+
+        .listItem:hover {
+            border-left: 10px solid #DEDEDE;
+        }
+
+        dragcase > .listItem {
+            border-bottom: 0;
+        }
+
+        .item {
+            cursor: move;
+            text-align: center;
+            background-color: #F8F8F8;
+        }
+
+        .item.huge {
+            height: 200px;
+            width: 200px;
+            line-height: 198px;
+        }
+
+        .item.big {
+            height: 150px;
+            width: 150px;
+            line-height: 148px;
+        }
+
+        .item.small {
+            height: 100px;
+            width: 100px;
+            line-height: 98px;
+        }
+
+        .item.tiny {
+            height: 50px;
+            width: 50px;
+            line-height: 48px;
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Drag.js</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<button type="button" id="add" onclick="add(1)">add</button>
+<input id="count" value=10>
+<div class="mainFrame">
+    <div class="contentFrame">
+        <div>
+            <div class="section">
+                <div class="center">
+                    <div class="centerItem listContainer" id="1111">
+                    </div>
+                    <div class="centerItem listContainer" id="2222">
+                    </div>
+                    <div class="centerItem listContainer" id="3333">
+                    </div>
+                    <div class="centerItem listContainer" id="4444">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>Click <a id="restoreItemBtn">here</a> to restore</p>
+</div>
+</body>
+<script id="s1" src="http://drag.js.org/blyde.min.js"></script>
+<script id="s2" src="http://drag.js.org/dist/drag.min.js"></script>
+<script id="s3" src="http://drag.js.org/demo.min.js"></script>
+<script>
+
+    var userNumber=0;  //用户编号
+
+    function add(count) {
+        for(var i=0;i<count;i++){
+            var divlist=document.getElementsByClassName("centerItem listContainer");
+            var path=Math.floor(Math.random() * (4 - 0) + 0);
+            var div = divlist.item(path);
+            var listItem = document.createElement("div");
+            listItem.className = "listItem";
+            listItem.draggable = "true";
+            var client = document.createElement("iframe");
+            client.src = "http://localhost:4444/index1.html";
+            client.frameBorder = "no";
+            client.border = "0";
+            client.marginheight = 0;
+            listItem.appendChild(client);
+            div.appendChild(listItem)
+        }
+        reloadAbleJSFn("s3","http://drag.js.org/demo.min.js")
+    }
+
+    function reloadAbleJSFn(id,newJS)
+    {
+        var oldjs = null;
+        var t = null;
+        var oldjs = document.getElementById(id);
+        if(oldjs) oldjs.parentNode.removeChild(oldjs);
+        var scriptObj = document.createElement("script");
+        scriptObj.src = newJS;
+        scriptObj.type = "text/javascript";
+        scriptObj.id   = id;
+        document.getElementsByTagName("head")[0].appendChild(scriptObj)
+
+    }
+
+    function sleep(numberMillis) {
+        var now = new Date();
+        var exitTime = now.getTime() + numberMillis;
+        while (true) {
+            now = new Date();
+            if (now.getTime() > exitTime)
+                return;
+        }
+    }
+</script>
+</html>
