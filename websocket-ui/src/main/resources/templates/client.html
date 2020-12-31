@@ -15,6 +15,17 @@
 
 </body>
 <script type="text/javascript">
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        // IE6, IE5 浏览器执行代码
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
     var websocket = null;
     var userId = "test" + uuid2(6);
     document.getElementById("userId").innerText = userId;
@@ -98,7 +109,10 @@
     //发送消息
     function send() {
         var message = document.getElementById('text').value;
-        websocket.send(message);
+        var toUser=message.toString().substring(1,11)
+        var message=message.toString().substring(12,message.toString().length)
+        xmlhttp.open("GET","http://localhost:9888/ufire-websocket/websocket/to/"+toUser+"/"+message,true);
+        xmlhttp.send();
     }
 
     function closeWebSocket() {
