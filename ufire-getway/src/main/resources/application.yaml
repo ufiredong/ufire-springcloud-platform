@@ -1,0 +1,3 @@
+spring:
+  profiles:
+    active: dev  #读取配置文件类型

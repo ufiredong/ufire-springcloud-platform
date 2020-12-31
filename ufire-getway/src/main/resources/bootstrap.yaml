@@ -1,0 +1,13 @@
+server:
+  port: 9888
+spring:
+  application:
+    name: ufire-getway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848 #配置中心地址
+        file-extension: yaml  #指定yaml格式的配置
+        group: DEV_GROUP
