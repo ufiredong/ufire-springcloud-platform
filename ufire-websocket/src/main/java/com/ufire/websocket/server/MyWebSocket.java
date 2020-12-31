@@ -1,5 +1,6 @@
 package com.ufire.websocket.server;
 
+import com.ufire.websocket.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 @ServerEndpoint(value = "/socket/{userId}")
 public class MyWebSocket {
-    @Value("${server.port}")
-    private String serverPort;
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static AtomicInteger online = new AtomicInteger();
 
@@ -57,8 +56,7 @@ public class MyWebSocket {
         System.out.println(userId + "加入webSocket！当前人数为" + online);
         try {
             System.out.println(session + "欢迎" + userId + "加入连接！");
-            String hostAddress = InetAddress.getLocalHost().getHostAddress();
-            sendMessage(session, "『"+hostAddress+"』");
+            sendMessage(session, SpringUtil.getBean("myhost").toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
