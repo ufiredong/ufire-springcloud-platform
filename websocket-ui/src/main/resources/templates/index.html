@@ -184,13 +184,13 @@
         <div>
             <div class="section">
                 <div class="center">
-                    <div class="centerItem listContainer" id="1111">
-                    </div>
                     <div class="centerItem listContainer" id="2222">
                     </div>
                     <div class="centerItem listContainer" id="3333">
                     </div>
                     <div class="centerItem listContainer" id="4444">
+                    </div>
+                    <div class="centerItem listContainer" id="5555">
                     </div>
                 </div>
             </div>
@@ -203,9 +203,6 @@
 <script id="s2" src="http://drag.js.org/dist/drag.min.js"></script>
 <script id="s3" src="http://drag.js.org/demo.min.js"></script>
 <script>
-
-    var userNumber=0;  //用户编号
-
     function add(count) {
         for(var i=0;i<count;i++){
             var divlist=document.getElementsByClassName("centerItem listContainer");
@@ -215,7 +212,7 @@
             listItem.className = "listItem";
             listItem.draggable = "true";
             var client = document.createElement("iframe");
-            client.src = "http://localhost:9888/index1.html";
+            client.src = "http://localhost:9876/websocket/client";
             client.frameBorder = "no";
             client.border = "0";
             client.marginheight = 0;

@@ -6,25 +6,24 @@
     <title>Title</title>
 </head>
 <body>
-<span style="font-size: 8px;height: 18px;line-height: 1;">『192.168.1.1』</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="userId" style="font-size: 8px;height: 18px;line-height: 1;"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span  id="state" style=" background: rgb(238, 255, 255);color:green;font-size: 8px;height: 18px;line-height: 1;">online</span><br/>
-<input style="font-size: 8px;width:100px; height:12px" ; id="text" type="text"/>&nbsp;&nbsp;&nbsp;<button
-        style="font-size: 8px;width:40px; height:18px" onclick="send()">send
-</button>&nbsp;&nbsp;&nbsp;<button id="status" style="font-size: 8px;width:40px; height:18px"
-                                   onclick="upOrDownWebSocket()"></button>
-<div id="message" style="font-size: 8px;height: 18px;line-height: 1;">
+<span id="serverPort"style="font-size: 8px;height: 18px;line-height: 1;"></span><span id="userId"style="font-size: 8px;height: 18px;line-height: 1;"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="state" style=" background: rgb(238, 255, 255);color:green;font-size: 8px;height: 18px;line-height: 1;">online</span><br/>
+<input style="font-size: 8px;width:100px; height:12px" ; id="text" type="text"/>&nbsp;&nbsp;&nbsp;<button style="font-size: 8px;width:40px; height:18px" onclick="send()">send
+</button>&nbsp;&nbsp;&nbsp;<button id="status" style="font-size: 8px;width:40px; height:18px" onclick="upOrDownWebSocket()"></button>
+<div  id="loop">
+    <marquee loop=2 class="loop"><font size=+3 color=red id="message" style="font-size: 8px;height: 18px;line-height: 1;"></font></marquee>
 </div>
+
 </body>
 <script type="text/javascript">
     var websocket = null;
-    var userId = "test"+uuid2(6);
-    document.getElementById("userId").innerText=userId;
+    var userId = "test" + uuid2(6);
+    document.getElementById("userId").innerText = userId;
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
-        websocket = new WebSocket("ws://localhost:9888/socket/" + userId);
+        websocket = new WebSocket("ws://localhost:9888/ufire-websocket/socket/" + userId);
     } else {
         alert('Not support websocket')
     }
-
 
     //连接发生错误的回调方法
     websocket.onerror = function () {
@@ -34,14 +33,18 @@
 
     //连接成功建立的回调方法
     websocket.onopen = function (event) {
-        // setMessageInnerHTML("open");
         var status = document.getElementById("status");
         status.innerText = "down"
     }
 
     //接收到消息的回调方法
     websocket.onmessage = function (event) {
-        setMessageInnerHTML(event.data);
+        if (event.data.indexOf("『") != -1) {
+            var serverPort = document.getElementById("serverPort");
+            serverPort.innerText = event.data;
+        } else {
+            setMessageInnerHTML(event.data);
+        }
     }
 
     //连接关闭的回调方法
@@ -58,32 +61,37 @@
 
     //将消息显示在网页上
     function setMessageInnerHTML(innerHTML) {
-        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+        var  messageDiv=document.getElementById("loop")
+        var message = document.getElementsByClassName("loop");
+        var node = message.item(0).cloneNode(true);
+        message.item(0).remove();
+        messageDiv.appendChild(node);
+        document.getElementById('message').innerHTML = innerHTML;
+        //
     }
 
     //关闭连接
     function upOrDownWebSocket() {
-        debugger
-        var state=document.getElementById("state");
+        var state = document.getElementById("state");
         var status = document.getElementById("status");
         if (status.innerText == "down") {
             websocket.close();
             status.innerText = "up"
-            state.innerText="offline"
-            state.style.color="red"
+            state.innerText = "offline"
+            state.style.color = "red"
         } else {
             if (status.innerText == "up") {
                 if ('WebSocket' in window) {
-                    var userId=document.getElementById("userId").innerText;
+                    var userId = document.getElementById("userId").innerText;
                     websocket = new WebSocket("ws://localhost:8080/socket/" + userId);
                 } else {
                     alert('Not support websocket')
                 }
                 status.innerText = "down"
             }
-            var state=document.getElementById("state");
-            state.innerText="online"
-            state.style.color="green"
+            var state = document.getElementById("state");
+            state.innerText = "online"
+            state.style.color = "green"
         }
     }
 
@@ -126,6 +134,7 @@
 
         return uuid.join('');
     }
+
     function uuid() {
         var s = [];
         var hexDigits = "0123456789abcdef";
