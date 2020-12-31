@@ -27,7 +27,7 @@
         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
     var websocket = null;
-    var userId = "test" + uuid2(6);
+    var userId = uuid2(6);
     document.getElementById("userId").innerText = userId;
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
@@ -109,8 +109,8 @@
     //发送消息
     function send() {
         var message = document.getElementById('text').value;
-        var toUser=message.toString().substring(1,11)
-        var message=message.toString().substring(12,message.toString().length)
+        var toUser=message.toString().substring(1,7)
+        var message=message.toString().substring(8,message.toString().length)
         xmlhttp.open("GET","http://localhost:9888/ufire-websocket/websocket/to/"+toUser+"/"+message,true);
         xmlhttp.send();
     }
