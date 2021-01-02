@@ -14,6 +14,7 @@
         <module>ufire-netty-websocket</module>
         <module>ufire-github</module>
         <module>ufire-websocket</module>
+        <module>ufire-websocket-6666</module>
         <module>websocket-ui</module>
     </modules>
 

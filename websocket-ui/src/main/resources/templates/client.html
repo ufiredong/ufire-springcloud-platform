@@ -94,7 +94,7 @@
             if (status.innerText == "up") {
                 if ('WebSocket' in window) {
                     var userId = document.getElementById("userId").innerText;
-                    websocket = new WebSocket("ws://localhost:8080/socket/" + userId);
+                    websocket = new WebSocket("ws://localhost:9888/ufire-websocket/socket/" + userId);
                 } else {
                     alert('Not support websocket')
                 }
