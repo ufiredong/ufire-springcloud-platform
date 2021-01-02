@@ -54,6 +54,7 @@ public class ServiceStatusListner {
                         int hash = HashRingUtil.getHash(hostPort);
                         jedis.hset(SERVER_WEBSOCKET, hostPort, String.valueOf(hash));
                     }
+                    jedis.publish("serverUpdate", jedis.get(SERVER_WEBSOCKET));
                 }
             });
         }

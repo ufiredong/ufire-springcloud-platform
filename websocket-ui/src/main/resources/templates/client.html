@@ -1,18 +1,24 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 <head>
+
 
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<span id="serverPort"style="font-size: 8px;height: 18px;line-height: 1;"></span><span id="userId"style="font-size: 8px;height: 18px;line-height: 1;"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="state" style=" background: rgb(238, 255, 255);color:green;font-size: 8px;height: 18px;line-height: 1;">online</span><br/>
+<span id="serverPort"style="font-size: 8px;height: 18px;line-height: 1;"></span><span id="userId"style="font-size: 8px;height: 18px;line-height: 1;">userId1234</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="state" style=" background: rgb(238, 255, 255);color:green;font-size: 8px;height: 18px;line-height: 1;">online</span><br/>
 <input style="font-size: 8px;width:100px; height:12px" ; id="text" type="text"/>&nbsp;&nbsp;&nbsp;<button style="font-size: 8px;width:40px; height:18px" onclick="send()">send
 </button>&nbsp;&nbsp;&nbsp;<button id="status" style="font-size: 8px;width:40px; height:18px" onclick="upOrDownWebSocket()"></button>
 <div  id="loop">
     <marquee loop=2 class="loop"><font size=+3 color=red id="message" style="font-size: 8px;height: 18px;line-height: 1;"></font></marquee>
 </div>
-
+<p id="userIdd" style="display: none">
+    <strong th:text="${userId}"></strong>
+</p>
 </body>
 <script type="text/javascript">
     var xmlhttp;
@@ -26,9 +32,12 @@
         // IE6, IE5 浏览器执行代码
         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
+
+
+    console.info()
     var websocket = null;
-    var userId = uuid2(6);
-    document.getElementById("userId").innerText = userId;
+    var userId =document.getElementById("userIdd").textContent;
+  //  document.getElementById("userId").innerText=userId;
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
         websocket = new WebSocket("ws://localhost:9888/ufire-websocket/socket/" + userId);
@@ -161,6 +170,16 @@
 
         var uuid = s.join("");
         return uuid;
+    }
+    function getQueryVariable(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
     }
 </script>
 </html>

@@ -1,5 +1,6 @@
 package com.springcloud.ufire.listener;
 
+import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisPubSub;
 
 /**
@@ -7,6 +8,7 @@ import redis.clients.jedis.JedisPubSub;
  * @author: fengandong
  * @time: 2021/1/1 22:54
  */
+@Component
 public class RedisMsgPubSubListener extends JedisPubSub {
 
     @Override
