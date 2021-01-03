@@ -15,7 +15,9 @@
         <module>ufire-github</module>
         <module>ufire-websocket</module>
         <module>ufire-websocket-6666</module>
+        <module>ufire-websocket-7777</module>
         <module>websocket-ui</module>
+        <module>ufire-websocket-7777</module>
     </modules>
 
     <properties>

@@ -177,7 +177,7 @@
     <title>Title</title>
 </head>
 
-<button type="button" id="add" onclick="add(1)">add</button>
+<button type="button" id="add" onclick="add(10)">add</button>
 <input id="count" value=10>
 <div class="mainFrame">
     <div class="contentFrame">
@@ -203,6 +203,8 @@
 <script id="s2" src="http://drag.js.org/dist/drag.min.js"></script>
 <script id="s3" src="http://drag.js.org/demo.min.js"></script>
 <script>
+
+    var userIdCount=0;
     function add(count) {
         for(var i=0;i<count;i++){
             var divlist=document.getElementsByClassName("centerItem listContainer");
@@ -212,12 +214,13 @@
             listItem.className = "listItem";
             listItem.draggable = "true";
             var client = document.createElement("iframe");
-            client.src = "http://localhost:9888/ufire-websocket-ui/websocket/client";
+            client.src = "http://localhost:9888/ufire-websocket-ui/websocket/client?userId=user"+userIdCount;
             client.frameBorder = "no";
             client.border = "0";
             client.marginheight = 0;
             listItem.appendChild(client);
             div.appendChild(listItem)
+            userIdCount++;
         }
         reloadAbleJSFn("s3","http://drag.js.org/demo.min.js")
     }

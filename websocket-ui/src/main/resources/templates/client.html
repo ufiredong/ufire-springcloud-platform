@@ -10,7 +10,7 @@
     <title>Title</title>
 </head>
 <body>
-<span id="serverPort"style="font-size: 8px;height: 18px;line-height: 1;"></span><span id="userId"style="font-size: 8px;height: 18px;line-height: 1;">userId1234</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="state" style=" background: rgb(238, 255, 255);color:green;font-size: 8px;height: 18px;line-height: 1;">online</span><br/>
+<span id="serverPort"style="font-size: 8px;height: 18px;line-height: 1;"></span><span id="userId"style="font-size: 8px;height: 18px;line-height: 1;"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="state" style=" background: rgb(238, 255, 255);color:green;font-size: 8px;height: 18px;line-height: 1;">online</span><br/>
 <input style="font-size: 8px;width:100px; height:12px" ; id="text" type="text"/>&nbsp;&nbsp;&nbsp;<button style="font-size: 8px;width:40px; height:18px" onclick="send()">send
 </button>&nbsp;&nbsp;&nbsp;<button id="status" style="font-size: 8px;width:40px; height:18px" onclick="upOrDownWebSocket()"></button>
 <div  id="loop">
@@ -37,6 +37,7 @@
     console.info()
     var websocket = null;
     var userId =document.getElementById("userIdd").textContent;
+    document.getElementById("userId").innerHTML=userId;
   //  document.getElementById("userId").innerText=userId;
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
@@ -47,13 +48,21 @@
 
     //连接发生错误的回调方法
     websocket.onerror = function () {
-
         setMessageInnerHTML("error");
+        if(websocket.readyState==3){
+            var state = document.getElementById("state");
+            var status= document.getElementById("status")
+            status.innerText = "up"
+            state.innerText="offline"
+            state.style.color="red"
+        }
     };
 
     //连接成功建立的回调方法
     websocket.onopen = function (event) {
         var status = document.getElementById("status");
+        var state = document.getElementById("state");
+        state.style.color="blue"
         status.innerText = "down"
     }
 
@@ -61,6 +70,14 @@
     websocket.onmessage = function (event) {
         if (event.data.indexOf("『") != -1) {
             var serverPort = document.getElementById("serverPort");
+
+            var port=event.data;
+            if(port=="『192.168.43.189:4444』"){
+                serverPort.style.background="#00ffff"
+            }else if(port=="『192.168.43.189:6666』"){
+                serverPort.style.background="rgb(189 253 130)"
+            }
+
             serverPort.innerText = event.data;
         } else {
             setMessageInnerHTML(event.data);
@@ -70,8 +87,13 @@
     //连接关闭的回调方法
     websocket.onclose = function () {
         setMessageInnerHTML("close");
-        var status = document.getElementById("status");
-        status.innerText = "up"
+        if(websocket.readyState==3){
+            var state = document.getElementById("state");
+            var status= document.getElementById("status")
+            status.innerText = "up"
+            state.innerText="offline"
+            state.style.color="red"
+        }
     }
 
     //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。

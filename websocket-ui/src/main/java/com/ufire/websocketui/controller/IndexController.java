@@ -26,24 +26,14 @@ public class IndexController {
 
     @GetMapping("/index")
     public String inedx() {
-        userId = new AtomicInteger();
+//        userId = new AtomicInteger();
         return "index";
     }
 
     @GetMapping("/client")
 
-    public String client(Model model, HttpServletRequest request) {
-        System.out.println(request.hashCode());
-//        if (requestSessionPools.containsKey(request)) {
-//            String userIdd = requestSessionPools.get(request);
-//            model.addAttribute("userId", userIdd);
-//            System.out.println("--------------------------------------------------");
-//        } else {
-            String userIdd = "test" + userId;
-            model.addAttribute("userId", userIdd);
-            requestSessionPools.put(request, userIdd);
-            addUserId();
-//        }
+    public String client(Model model, String userId) {
+        model.addAttribute("userId",userId);
         return "client";
     }
 

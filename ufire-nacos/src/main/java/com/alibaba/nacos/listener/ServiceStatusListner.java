@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -26,7 +27,7 @@ import java.util.*;
 public class ServiceStatusListner {
     private static final Logger logger = LoggerFactory.getLogger(ServiceStatusListner.class);
     @Autowired
-    private Jedis jedis;
+    private JedisPool jedisPool;
     private Map<Integer, String> instanceHashMap = new HashMap<>();
 
     private static final String SERVER_WEBSOCKET = "ufire-websocket";
@@ -46,6 +47,8 @@ public class ServiceStatusListner {
             naming.subscribe(serviceName, new EventListener() {
                 @Override
                 public void onEvent(Event event) {
+                    Jedis jedis;
+                    jedis = jedisPool.getResource();
                     List<Instance> instances = ((NamingEvent) event).getInstances();
                     String serviceName = ((NamingEvent) event).getServiceName();
                     jedis.del(SERVER_WEBSOCKET);
@@ -54,7 +57,9 @@ public class ServiceStatusListner {
                         int hash = HashRingUtil.getHash(hostPort);
                         jedis.hset(SERVER_WEBSOCKET, hostPort, String.valueOf(hash));
                     }
-                    jedis.publish("serverUpdate", jedis.get(SERVER_WEBSOCKET));
+
+                    PublishThread publishThread = new PublishThread(jedisPool, "ufire-websocket server is update");
+                    publishThread.start();
                 }
             });
         }

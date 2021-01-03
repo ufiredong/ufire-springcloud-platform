@@ -1,8 +1,12 @@
 package com.ufire.websocket.server;
 
+import com.ufire.websocket.util.HashRingUtil;
 import com.ufire.websocket.util.SpringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -27,6 +31,7 @@ public class MyWebSocket {
 
     //concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。
     private static Map<String, Session> sessionPools = new HashMap<>();
+
 
 
     /**
@@ -56,6 +61,11 @@ public class MyWebSocket {
         System.out.println(userId + "加入webSocket！当前人数为" + online);
         try {
             System.out.println(session + "欢迎" + userId + "加入连接！");
+
+            JedisPool jedisPool =SpringUtil.getBean(JedisPool.class);
+            Jedis jedis = jedisPool.getResource();
+            int hash = HashRingUtil.getHash(userId);
+            jedis.hset("user",userId, String.valueOf(hash));
             sendMessage(session, SpringUtil.getBean("myhost").toString());
         } catch (Exception e) {
             e.printStackTrace();
