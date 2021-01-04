@@ -34,6 +34,10 @@ public class MyWebSocket {
 
 
 
+
+
+
+
     /**
      * 发送消息方法
      *
@@ -60,12 +64,12 @@ public class MyWebSocket {
         addOnlineCount();
         System.out.println(userId + "加入webSocket！当前人数为" + online);
         try {
-            System.out.println(session + "欢迎" + userId + "加入连接！");
-
             JedisPool jedisPool =SpringUtil.getBean(JedisPool.class);
             Jedis jedis = jedisPool.getResource();
+            System.out.println(session + "欢迎" + userId + "加入连接！");
             int hash = HashRingUtil.getHash(userId);
             jedis.hset("user",userId, String.valueOf(hash));
+            jedis.close();
             sendMessage(session, SpringUtil.getBean("myhost").toString());
         } catch (Exception e) {
             e.printStackTrace();

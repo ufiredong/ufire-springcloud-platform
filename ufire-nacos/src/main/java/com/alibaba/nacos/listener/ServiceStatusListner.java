@@ -44,11 +44,11 @@ public class ServiceStatusListner {
         serviceNames.add(SERVER_WEBSOCKET);
         // 每次ufire-websocket实例发生上线事件即更新redis
         for (String serviceName : serviceNames) {
+            Jedis jedis = jedisPool.getResource();
             naming.subscribe(serviceName, new EventListener() {
                 @Override
                 public void onEvent(Event event) {
-                    Jedis jedis;
-                    jedis = jedisPool.getResource();
+                    System.out.println("有事件发送");
                     List<Instance> instances = ((NamingEvent) event).getInstances();
                     String serviceName = ((NamingEvent) event).getServiceName();
                     jedis.del(SERVER_WEBSOCKET);
@@ -62,6 +62,8 @@ public class ServiceStatusListner {
                     publishThread.start();
                 }
             });
+            System.out.println("---------yizhi--------------");
+            System.out.println(Thread.currentThread().getName());
         }
     }
 

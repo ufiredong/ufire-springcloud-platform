@@ -7,6 +7,11 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+  redis.maxTotal: 300
+  redis.maxIdle: 8
+  redis.minIdle: 1
+  redis.testOnBorrow: true
+  redis.testOnReturn: true
 
 #server:
 #  port: 8885

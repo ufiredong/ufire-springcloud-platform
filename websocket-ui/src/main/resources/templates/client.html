@@ -36,7 +36,9 @@
 
     console.info()
     var websocket = null;
-    var userId =document.getElementById("userIdd").textContent;
+    debugger
+    var userId =document.getElementById("userIdd").innerText.replace(/(^\s*)|(\s*$)/g, "");
+    console.info(userId.length)
     document.getElementById("userId").innerHTML=userId;
   //  document.getElementById("userId").innerText=userId;
     //判断当前浏览器是否支持WebSocket
@@ -72,10 +74,14 @@
             var serverPort = document.getElementById("serverPort");
 
             var port=event.data;
-            if(port=="『192.168.43.189:4444』"){
+            if(port=="『100.100.100.173:2222』"){
                 serverPort.style.background="#00ffff"
-            }else if(port=="『192.168.43.189:6666』"){
+            }else if(port=="『100.100.100.173:3333』"){
                 serverPort.style.background="rgb(189 253 130)"
+            }else if(port=="『100.100.100.173:4444』"){
+                serverPort.style.background="#33ffcc"
+            }else if(port=="『100.100.100.173:5555』"){
+                serverPort.style.background="#ff99cc"
             }
 
             serverPort.innerText = event.data;
@@ -139,9 +145,9 @@
 
     //发送消息
     function send() {
-        var message = document.getElementById('text').value;
-        var toUser=message.toString().substring(1,7)
-        var message=message.toString().substring(8,message.toString().length)
+        var message = document.getElementById('text').value.toString();
+        var toUser=message.substring(1,getIndex(message))
+        var message=message.substring(getIndex(message)+1,message.toString().length)
         xmlhttp.open("GET","http://localhost:9888/ufire-websocket/websocket/to/"+toUser+"/"+message,true);
         xmlhttp.send();
     }
@@ -193,15 +199,12 @@
         var uuid = s.join("");
         return uuid;
     }
-    function getQueryVariable(variable)
-    {
-        var query = window.location.search.substring(1);
-        var vars = query.split("&");
-        for (var i=0;i<vars.length;i++) {
-            var pair = vars[i].split("=");
-            if(pair[0] == variable){return pair[1];}
+    function getIndex(str){
+        for(var i=0;i<str.length;i++){
+            if(str[i]==':'){
+                return i
+            }
         }
-        return(false);
     }
 </script>
 </html>
