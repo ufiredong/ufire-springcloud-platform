@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @program: ufire-springcloud-platform
- * @description: X
+ * @description:
  * @author: fengandong
  * @create: 2021-01-04 16:51
  **/
