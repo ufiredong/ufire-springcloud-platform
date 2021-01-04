@@ -17,20 +17,20 @@ spring:
             - Path= **/**
           filters:
             - StripPrefix=1
-
-        - id: ufire-websocket-ws  #websocket 链接转发
-          uri: lb:ws://ufire-websocket
-          predicates:
-            - Path= /socket/**
-          filters:
-            - StripPrefix=1
-
-        - id: ufire-websocket-http  #websocket httpMessage信息发送
-          uri: lb://ufire-websocket
-          predicates:
-            - Path= /websocket/to/**
-          filters:
-            - StripPrefix=1
+#
+#        - id: ufire-websocket-ws  #websocket 链接转发
+#          uri: lb:ws://ufire-websocket
+#          predicates:
+#            - Path= /socket/**
+#          filters:
+#            - StripPrefix=1
+#
+#        - id: ufire-websocket-http  #websocket httpMessage信息发送
+#          uri: lb://ufire-websocket
+#          predicates:
+#            - Path= /websocket/to/**
+#          filters:
+#            - StripPrefix=1
 
     nacos:
       discovery:
