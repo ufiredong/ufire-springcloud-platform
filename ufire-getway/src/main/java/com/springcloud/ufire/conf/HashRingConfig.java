@@ -48,23 +48,33 @@ public class HashRingConfig {
 
 
     //得到应当路由到的结点
-    public ServiceInstance getServer(String key) {
-        //得到该key的hash值
-        int hash = getHash(key);
+    public ServiceInstance getServer(String UserId) {
+        int userHash = getHash(UserId);
         SortedMap<Integer, String> serverMap = hashRing.getServerMap();
-        for (Integer serverkey : serverMap.keySet()) {
-            if (serverkey > hash) {
-                String server = serverMap.get(serverkey);
-                if (server.indexOf(("&&")) != -1) {
-                    server = server.substring(0, server.indexOf("&&"));
-                }
-                String host = server.substring(0, server.indexOf(":"));
-                String port = server.substring(server.indexOf(":") + 1, server.length());
-                for (ServiceInstance instance : instances) {
-                    if (instance.getHost().equals(host) && instance.getPort() == Integer.parseInt(port)) {
-                        return instance;
-                    }
-                }
+        // 遍历 有序Map serverHash从小到大  如果 serverHash  大于 userHash  则被视为第一个大于userHash的 hash值,
+        // 第一个大于userHash 的 节点hash 就是需要路由到的节点如果是虚拟节点需解析获得真实节点。
+        for (Integer serverHash : serverMap.keySet()) {
+            if (serverHash > userHash) {
+                ServiceInstance instance = getServiceInstance(serverMap, serverHash);
+                return instance;
+            }
+        }
+        // 遍历完发现 userHash最大, 则路由到 serverhash节点环的第一个节点。
+        Integer serverHash = serverMap.firstKey();
+        ServiceInstance instance = getServiceInstance(serverMap, serverHash);
+        return instance;
+    }
+
+    private ServiceInstance getServiceInstance(SortedMap<Integer, String> serverMap, Integer serverHash) {
+        String server = serverMap.get(serverHash);
+        if (server.indexOf(("&&")) != -1) {
+            server = server.substring(0, server.indexOf("&&"));
+        }
+        String host = server.substring(0, server.indexOf(":"));
+        String port = server.substring(server.indexOf(":") + 1, server.length());
+        for (ServiceInstance instance : instances) {
+            if (instance.getHost().equals(host) && instance.getPort() == Integer.parseInt(port)) {
+                return instance;
             }
         }
         return null;
