@@ -1,5 +1,6 @@
 package com.springcloud.ufire.rule;
 
+import com.springcloud.ufire.conf.HashRingConfig;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.server.ServerWebExchange;
@@ -11,5 +12,5 @@ public interface IChooseRule {
      * @param discoveryClient
      * @return
      */
-    ServiceInstance choose(ServerWebExchange exchange, DiscoveryClient discoveryClient);
+    ServiceInstance choose(ServerWebExchange exchange, HashRingConfig hashRingConfig);
 }

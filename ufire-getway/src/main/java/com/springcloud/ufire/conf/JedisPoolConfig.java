@@ -13,7 +13,7 @@ import redis.clients.jedis.JedisPool;
 @Configuration
 public class JedisPoolConfig {
     @Bean
-    Jedis getJedis() {
-        return new Jedis("123.57.139.87", 6379);
+    JedisPool getJedis() {
+        return new JedisPool("123.57.139.87", 6379);
     }
 }

@@ -1,6 +1,7 @@
 package com.springcloud.ufire.filter;
 
 import com.alibaba.nacos.client.naming.utils.CollectionUtils;
+import com.springcloud.ufire.conf.HashRingConfig;
 import com.springcloud.ufire.rule.ConsistencyChooseRule;
 import com.springcloud.ufire.rule.IChooseRule;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -23,12 +24,11 @@ import java.util.List;
  * @create: 2021-01-04 16:48
  **/
 public class CustomLoadBalancerClientFilter extends LoadBalancerClientFilter implements BeanPostProcessor {
-    private final DiscoveryClient discoveryClient;
-
+    private final HashRingConfig hashRingConfig;
     private final List<IChooseRule> chooseRules;
-    public CustomLoadBalancerClientFilter(LoadBalancerClient loadBalancer, LoadBalancerProperties properties, DiscoveryClient discoveryClient, List<IChooseRule> chooseRules) {
+    public CustomLoadBalancerClientFilter(LoadBalancerClient loadBalancer, LoadBalancerProperties properties, HashRingConfig hashRingConfig, List<IChooseRule> chooseRules) {
         super(loadBalancer, properties);
-        this.discoveryClient = discoveryClient;
+        this.hashRingConfig = hashRingConfig;
         this.chooseRules = chooseRules;
         chooseRules.add(new ConsistencyChooseRule());
     }
@@ -39,7 +39,7 @@ public class CustomLoadBalancerClientFilter extends LoadBalancerClientFilter imp
             Iterator<IChooseRule> iChooseRuleIterator = chooseRules.iterator();
             while (iChooseRuleIterator.hasNext()){
                 IChooseRule chooseRule = iChooseRuleIterator.next();
-                ServiceInstance choose = chooseRule.choose(exchange,discoveryClient);
+                ServiceInstance choose = chooseRule.choose(exchange,hashRingConfig);
                 if(choose != null){
                     return choose;
                 }

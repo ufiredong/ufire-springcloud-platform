@@ -33,11 +33,6 @@ public class MyWebSocket {
     private static Map<String, Session> sessionPools = new HashMap<>();
 
 
-
-
-
-
-
     /**
      * 发送消息方法
      *
@@ -64,11 +59,11 @@ public class MyWebSocket {
         addOnlineCount();
         System.out.println(userId + "加入webSocket！当前人数为" + online);
         try {
-            JedisPool jedisPool =SpringUtil.getBean(JedisPool.class);
+            JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
             Jedis jedis = jedisPool.getResource();
             System.out.println(session + "欢迎" + userId + "加入连接！");
             int hash = HashRingUtil.getHash(userId);
-            jedis.hset("user",userId, String.valueOf(hash));
+            jedis.hset("user", String.valueOf(hash), userId);
             jedis.close();
             sendMessage(session, SpringUtil.getBean("myhost").toString());
         } catch (Exception e) {
