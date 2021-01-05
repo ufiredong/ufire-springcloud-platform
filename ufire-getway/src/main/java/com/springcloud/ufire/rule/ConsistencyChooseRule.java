@@ -37,6 +37,17 @@ public class ConsistencyChooseRule implements IChooseRule {
                     //do nothing
                 }
             }
+
+            if (originalUrl.getPath().contains("/websocket")) {
+                try {
+                    List<PathContainer.Element> elements = exchange.getRequest().getPath().elements();
+                    log.info("解析转发url:{}", exchange.getRequest().getURI());
+                    String userId = elements.get(elements.size() - 3).value();
+                    return hashRingConfig.getServer(userId);
+                } catch (Exception e) {
+                    //do nothing
+                }
+            }
         }
 
         return null;

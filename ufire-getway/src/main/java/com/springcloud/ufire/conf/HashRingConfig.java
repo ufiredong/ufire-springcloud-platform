@@ -55,7 +55,7 @@ public class HashRingConfig {
         for (Integer serverkey : serverMap.keySet()) {
             if (serverkey > hash) {
                 String server = serverMap.get(serverkey);
-                if (server.indexOf(("&&")) == -1) {
+                if (server.indexOf(("&&")) != -1) {
                     server = server.substring(0, server.indexOf("&&"));
                 }
                 String host = server.substring(0, server.indexOf(":"));
