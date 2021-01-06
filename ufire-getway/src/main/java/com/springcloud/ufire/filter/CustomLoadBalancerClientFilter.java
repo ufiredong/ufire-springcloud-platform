@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * @program: ufire-springcloud-platform
- * @description: X
+ * @description: 定义自定义过滤器
  * @author: fengandong
  * @create: 2021-01-04 16:48
  **/

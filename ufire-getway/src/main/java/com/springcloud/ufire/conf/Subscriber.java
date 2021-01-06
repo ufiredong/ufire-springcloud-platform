@@ -6,8 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
-
 import java.util.Map;
+
+/**
+ * @description: 监听 注册中心节点变动
+ * @author: fengandong
+ * @time: 2021/1/3 2:28
+ */
 
 @Configuration
 public class Subscriber extends JedisPubSub {
@@ -25,7 +30,8 @@ public class Subscriber extends JedisPubSub {
         hashRingConfig.updateHashRing(serverMap, userMap);
         //增加虚拟节点
         hashRingConfig.addVirtualNode(hashRingConfig.getHashRing());
-        log.info(hashRingConfig.getHashRing().toString());
+        log.info("本次节点变动-虚拟节点插入完毕 {} ",hashRingConfig.getHashRing().getServerMap());
+        log.info("上次节点变动 {} ",hashRingConfig.getHashRing().getLastTimeServerMap());
     }
 
     @Override

@@ -45,6 +45,9 @@ public class GetawayConfig {
         return new CustomLoadBalancerClientFilter(client, properties, hashRingConfig, chooseRules);
     }
 
+    /**
+     * 启动getway 初始化HashRingConfig对象
+     */
     @Bean
     public HashRingConfig initHashRingConfig() {
         log.info("-------------------初始化HashRingConfig对象-----------------");

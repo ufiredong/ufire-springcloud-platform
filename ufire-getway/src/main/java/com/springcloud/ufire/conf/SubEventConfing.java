@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
 
 /**
- * @description:
+ * @description: 频道订阅
  * @author: fengandong
  * @time: 2021/1/3 2:24
  */

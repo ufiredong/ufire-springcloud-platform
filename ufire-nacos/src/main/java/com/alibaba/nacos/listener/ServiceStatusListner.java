@@ -47,7 +47,7 @@ public class ServiceStatusListner {
                     jedis.hset(SERVER_WEBSOCKET, String.valueOf(realNodeHash), realNode);
                 }
                 jedis.close();
-                PublishThread publishThread = new PublishThread(jedisPool, "ufire-websocket server is update");
+                PublishThread publishThread = new PublishThread(jedisPool, "ufire-websocket 实例节点 down/up了");
                 publishThread.start();
             }
         });

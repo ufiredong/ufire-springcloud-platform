@@ -76,13 +76,13 @@
             var parentListItem = window.parent.document.getElementById(userId)
             var port=event.data
             parentListItem.setAttribute("hostport",port.replace("『","").replace("』",""))
-            if(port=="『100.100.100.173:2222』"){
+            if(port=="『192.168.86.137:2222』"){
                 serverPort.style.background="#00ffff"
-            }else if(port=="『100.100.100.173:3333』"){
-                serverPort.style.background="rgb(189 253 130)"
-            }else if(port=="『100.100.100.173:4444』"){
-                serverPort.style.background="#33ffcc"
-            }else if(port=="『100.100.100.173:5555』"){
+            }else if(port=="『192.168.86.137:3333』"){
+                serverPort.style.background="#9bee79"
+            }else if(port=="『192.168.86.137:4444』"){
+                serverPort.style.background="#b504e0"
+            }else if(port=="『192.168.86.137:5555』"){
                 serverPort.style.background="#ff99cc"
             }
 

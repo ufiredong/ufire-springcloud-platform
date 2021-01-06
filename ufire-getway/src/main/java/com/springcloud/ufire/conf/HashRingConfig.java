@@ -14,6 +14,7 @@ import java.util.*;
  * @create: 2021-01-05 11:11
  **/
 public class HashRingConfig {
+
     private static final Logger log = LoggerFactory.getLogger(HashRingConfig.class);
     //真实结点需要对应的虚拟节点个数
     private static final int VIRTUAL_NODES = 100;
@@ -22,6 +23,9 @@ public class HashRingConfig {
 
     private List<ServiceInstance> instances;
 
+    /**
+     * 修改hash环，将上次的节点hash值赋值给 lastTimeServerMap 保存
+     */
     public void updateHashRing(Map<String, String> serverMap, Map<String, String> userMap) {
         HashRingEntity hashRingEntity = new HashRingEntity();
         SortedMap<Integer, String> serverSortedMap = new TreeMap<>();
@@ -47,7 +51,9 @@ public class HashRingConfig {
     }
 
 
-    //得到应当路由到的结点
+    /**
+     * 计算userId的hash值求得需要路由到的节点
+     */
     public ServiceInstance getServer(String UserId) {
         int userHash = getHash(UserId);
         SortedMap<Integer, String> serverMap = hashRing.getServerMap();
@@ -65,6 +71,9 @@ public class HashRingConfig {
         return instance;
     }
 
+    /**
+     * 解析虚拟节点对应的真实节点，匹配对应的 instance 返回
+     */
     private ServiceInstance getServiceInstance(SortedMap<Integer, String> serverMap, Integer serverHash) {
         String server = serverMap.get(serverHash);
         if (server.indexOf(("&&")) != -1) {
@@ -80,7 +89,9 @@ public class HashRingConfig {
         return null;
     }
 
-
+    /**
+     * 计算hash值
+     */
     public int getHash(String str) {
         final int p = 16777619;
         int hash = (int) 2166136261L;
@@ -100,6 +111,9 @@ public class HashRingConfig {
         return hash;
     }
 
+    /**
+     * 加入虚拟节点
+     */
     public void addVirtualNode(HashRingEntity hashRing) {
         SortedMap<Integer, String> serverMap = hashRing.getServerMap();
         SortedMap<Integer, String> virtualServerMap = new TreeMap<>();
@@ -109,18 +123,9 @@ public class HashRingConfig {
                 int virtualNodeHash = getHash(virtualNode);
                 virtualServerMap.put(virtualNodeHash, virtualNode);
             }
-            log.info("--------------------------------");
         }
         serverMap.putAll(virtualServerMap);
         hashRing.setServerMap(serverMap);
         this.hashRing = hashRing;
     }
-
-
-//    for (int i = 0; i < VIRTUAL_NODES; i++) {
-//        String virtualNode = realNode + "&&VN" + String.valueOf(i);
-//        int virtualNodeHash = HashRingUtil.getHash(virtualNode);
-//        jedis.hset(SERVER_WEBSOCKET, String.valueOf(virtualNodeHash), virtualNode);
-//    }
-
 }
