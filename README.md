@@ -1,2 +1,2 @@
 # ufire-springcloud-platform
-学习微服-基于hash一致性算法实现websocket集群的尝试（未完成）。
+学习微服-基于一致性hash算法实现 websocket 分布式集群的尝试。
