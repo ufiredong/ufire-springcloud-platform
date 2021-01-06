@@ -72,8 +72,10 @@
     websocket.onmessage = function (event) {
         if (event.data.indexOf("『") != -1) {
             var serverPort = document.getElementById("serverPort");
-
-            var port=event.data;
+            var userId =document.getElementById("userId").innerHTML;
+            var parentListItem = window.parent.document.getElementById(userId)
+            var port=event.data
+            parentListItem.setAttribute("hostport",port.replace("『","").replace("』",""))
             if(port=="『100.100.100.173:2222』"){
                 serverPort.style.background="#00ffff"
             }else if(port=="『100.100.100.173:3333』"){

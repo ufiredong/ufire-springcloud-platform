@@ -177,13 +177,15 @@
     <title>Title</title>
 </head>
 
-<button type="button" id="add" onclick="add(1)">add</button>
+<button type="button" id="add" onclick="add(10)">add</button>
+<button type="button" id="group" onclick="group()">group</button>
 <input id="count" value=10>
 <div class="mainFrame">
     <div class="contentFrame">
         <div>
             <div class="section">
                 <div class="center">
+
                     <div class="centerItem listContainer" id="2222">
                     </div>
                     <div class="centerItem listContainer" id="3333">
@@ -191,6 +193,8 @@
                     <div class="centerItem listContainer" id="4444">
                     </div>
                     <div class="centerItem listContainer" id="5555">
+                    </div>
+                    <div class="centerItem listContainer" id="default" style="display: none">
                     </div>
                 </div>
             </div>
@@ -204,17 +208,20 @@
 <script id="s3" src="http://drag.js.org/demo.min.js"></script>
 <script>
 
-    var userIdCount=0;
+    var userIdCount = 0;
+
     function add(count) {
-        for(var i=0;i<count;i++){
-            var divlist=document.getElementsByClassName("centerItem listContainer");
-            var path=Math.floor(Math.random() * (4 - 0) + 0);
+        for (var i = 0; i < count; i++) {
+            var divlist = document.getElementsByClassName("centerItem listContainer");
+            var path = Math.floor(Math.random() * (4 - 0) + 0);
             var div = divlist.item(path);
             var listItem = document.createElement("div");
             listItem.className = "listItem";
             listItem.draggable = "true";
+            listItem.id = "user" + userIdCount
+            listItem.setAttribute("hostport", "");
             var client = document.createElement("iframe");
-            client.src = "http://localhost:9888/ufire-websocket-ui/websocket/client?userId=user"+userIdCount;
+            client.src = "http://localhost:9888/ufire-websocket-ui/websocket/client?userId=user" + userIdCount;
             client.frameBorder = "no";
             client.border = "0";
             client.marginheight = 0;
@@ -222,31 +229,51 @@
             div.appendChild(listItem)
             userIdCount++;
         }
-        reloadAbleJSFn("s3","http://drag.js.org/demo.min.js")
+        reloadAbleJSFn("s3", "http://drag.js.org/demo.min.js")
     }
 
-    function reloadAbleJSFn(id,newJS)
-    {
+    // var client = document.getElementsByClassName("listItem")
+    // var Observer = new MutationObserver(function (mutations, instance) {
+    //     console.info("client发生变动了")
+    // });
+    // Observer.observe(client, {
+    // });
+
+    function reloadAbleJSFn(id, newJS) {
         var oldjs = null;
         var t = null;
         var oldjs = document.getElementById(id);
-        if(oldjs) oldjs.parentNode.removeChild(oldjs);
+        if (oldjs) oldjs.parentNode.removeChild(oldjs);
         var scriptObj = document.createElement("script");
         scriptObj.src = newJS;
         scriptObj.type = "text/javascript";
-        scriptObj.id   = id;
+        scriptObj.id = id;
         document.getElementsByTagName("head")[0].appendChild(scriptObj)
-
     }
 
-    function sleep(numberMillis) {
-        var now = new Date();
-        var exitTime = now.getTime() + numberMillis;
-        while (true) {
-            now = new Date();
-            if (now.getTime() > exitTime)
-                return;
+
+    function group() {
+        var clientList = document.getElementsByClassName("listItem")
+        var div5555 = document.getElementById("5555")
+        var div4444 = document.getElementById("4444")
+        var div3333 = document.getElementById("3333")
+        var div2222 = document.getElementById("2222")
+        for (var i = 0; i < clientList.length; i++) {
+            var client = clientList.item(i)
+            if (client.getAttribute("hostport").indexOf("5555") != -1) {
+                div5555.appendChild(client)
+            }
+            if (client.getAttribute("hostport").indexOf("4444") != -1) {
+                div4444.appendChild(client)
+            }
+            if (client.getAttribute("hostport").indexOf("3333") != -1) {
+                div3333.appendChild(client)
+            }
+            if (client.getAttribute("hostport").indexOf("2222") != -1) {
+                div2222.appendChild(client)
+            }
         }
     }
+
 </script>
 </html>
