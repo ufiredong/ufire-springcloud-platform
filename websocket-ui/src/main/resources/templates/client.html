@@ -57,33 +57,40 @@
         }
     };
 
-
-    //心跳检测
-    var heartCheck = {
-        timeout: 10000,//10秒
-        timeoutObj: null,
-        reset: function () {
-            clearTimeout(this.timeoutObj);
-            return this;
-        },
-        start: function () {
-            this.timeoutObj = setTimeout(function () {
-                //这里发送一个心跳，后端收到后，返回一个心跳消息，
-                //onmessage拿到返回的心跳就说明连接正常
-                //websocket.send("HeartBeat");
-                xmlhttp.open("GET", "http://localhost:9888/ufire-websocket/websocket/to/" + userId + "/" + "heartCheck", true);
-                xmlhttp.send();
-                xmlhttp.onreadystatechange = function () {
-                    if (xmlhttp.status == 404) {
-                        websocket.close();
-                    } else {
-                        console.info("连接正常")
-                        heartCheck.reset().start()
-                    }
-                }
-            }, this.timeout)
-        }
-    }
+    //
+    // //心跳检测
+    // var heartCheck = {
+    //     timeout: 1000,//10秒
+    //     timeoutObj: null,
+    //     reset: function () {
+    //         clearTimeout(this.timeoutObj);
+    //         return this;
+    //     },
+    //     start: function () {
+    //         this.timeoutObj = setTimeout(function () {
+    //             //这里发送一个心跳，后端收到后，返回一个心跳消息，
+    //             //onmessage拿到返回的心跳就说明连接正常
+    //             //websocket.send("HeartBeat");
+    //             xmlhttp.open("GET", "http://localhost:9888/ufire-websocket/websocket/to/" + userId + "/" + "heartCheck", true);
+    //             xmlhttp.send();
+    //
+    //             xmlhttp.onreadystatechange = function () {
+    //                // // sleep(10000); //休眠10秒
+    //                //  console.info(xmlhttp.status)
+    //
+    //                 var result = xmlhttp.responseText
+    //                 console.info(result);
+    //                 if (result == "ok") {
+    //                     console.info("连接正常")
+    //                     heartCheck.reset().start()
+    //                 } else {
+    //                     websocket.close();
+    //                 }
+    //
+    //             }
+    //         }, this.timeout)
+    //     }
+    // }
 
 
     //连接成功建立的回调方法
@@ -92,7 +99,7 @@
         var state = document.getElementById("state");
         state.style.color = "blue"
         status.innerText = "down"
-        heartCheck.reset().start();
+       // heartCheck.reset().start();
     }
 
     //接收到消息的回调方法
@@ -237,5 +244,17 @@
             }
         }
     }
+
+
+    function sleep(numberMillis) {
+        var now = new Date();
+        var exitTime = now.getTime() + numberMillis;
+        while (true) {
+            now = new Date();
+            if (now.getTime() > exitTime)
+                return;
+        }
+    }
+
 </script>
 </html>

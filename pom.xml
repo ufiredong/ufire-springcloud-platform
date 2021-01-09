@@ -11,8 +11,6 @@
     <modules>
         <module>ufire-nacos</module>
         <module>ufire-getway</module>
-        <module>ufire-netty-websocket</module>
-        <module>ufire-github</module>
         <module>ufire-websocket</module>
         <module>websocket-ui</module>
     </modules>

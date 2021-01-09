@@ -26,7 +26,12 @@ public class HttpMessageController {
     @RequestMapping(value = "to/{userId}/{message}")
     public String sendMessage(@PathVariable String userId, @PathVariable String message) {
         System.out.println(serverPort);
-        myWebSocket.sendInfo(userId, message);
+        // 心跳检查  heartCheck
+        if("heartCheck".equals(message)){
+            myWebSocket.sendInfo(userId, "");
+        }else{
+            myWebSocket.sendInfo(userId, message);
+        }
         return "OK";
     }
 
