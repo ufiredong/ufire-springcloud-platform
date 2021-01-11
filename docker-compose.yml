@@ -19,7 +19,7 @@ services:
       #指定docker域名(分配随机IP)
     hostname: ufire-redis
       #指定服务运行的端口 映射6379到宿主机
-      ports:
+    ports:
         - "6379:6379"
   ufire-getway:
     image: ufire-getway
@@ -30,18 +30,18 @@ services:
     #docker镜像名称
     image: ufire-websocket
       #docker容器名称
-      container_name: ufire-websocket-1
+    container_name: ufire-websocket-1
       #指定docker域名(分配随机IP)
   ufire-websocket-2:
     #docker镜像名称
     image: ufire-websocket
       #docker容器名称 随机分配IP
-      container_name: ufire-websocket-2
+    container_name: ufire-websocket-2
   ufire-websocket-3:
     #docker镜像名称
     image: ufire-websocket
       #docker容器名称 随机分配IP
-      container_name: ufire-websocket-3
+    container_name: ufire-websocket-3
 networks:
   default:
     external:
