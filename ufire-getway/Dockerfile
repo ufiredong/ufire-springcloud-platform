@@ -1,5 +1,5 @@
 # 基于java镜像创建新镜像
-FROM java:8
+FROM openjdk:8-jre-alpine
 # 作者
 MAINTAINER ufiread@sina.com
 WORKDIR /build

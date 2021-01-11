@@ -42,6 +42,11 @@ services:
     image: ufire-websocket
       #docker容器名称 随机分配IP
     container_name: ufire-websocket-3
+  ufire-websocket-ui:
+      #docker镜像名称
+    image: ufire-websocket-ui
+      #docker容器名称 随机分配IP
+    container_name: ufire-websocket-ui
 networks:
   default:
     external:
