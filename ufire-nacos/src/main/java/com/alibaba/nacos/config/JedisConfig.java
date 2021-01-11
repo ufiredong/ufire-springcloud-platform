@@ -20,6 +20,6 @@ public class JedisConfig {
          * */
         @Bean
         public JedisPool getJedisPool(){
-            return new JedisPool("123.57.139.87",6379);
+            return new JedisPool("ufire-redis",6379);
         }
 }
