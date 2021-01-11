@@ -3,7 +3,7 @@ FROM openjdk:8-jre-alpine
 # 作者
 MAINTAINER ufiread@sina.com
 WORKDIR /build
-ARG JAR_FILE=target/ufire-websocket-ui-1.0-SNAPSHOT.jar
+ARG JAR_FILE=target/websocket-ui-1.0-SNAPSHOT.jar
 # 将jar包添加到容器中并更名为app.jar
 ADD  ${JAR_FILE} ufire-websocket-ui.jar
 # 运行jar包
