@@ -1,4 +1,4 @@
-  version "3"
+  version: "3"
   services:
     ufire-nacos:
       image: ufire-nacos
@@ -9,7 +9,7 @@
       ports:
         - "8848:8848"
     ufire-redis:
-      image: ufire-redis
+      image: redis
       container_name: ufire-redis
       hostname: ufire-redis
       #指定服务运行的端口 映射6379到宿主机
