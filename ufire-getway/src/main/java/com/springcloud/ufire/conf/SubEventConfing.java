@@ -3,6 +3,7 @@ package com.springcloud.ufire.conf;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
 
@@ -16,11 +17,18 @@ import redis.clients.jedis.JedisPool;
 public class SubEventConfing implements CommandLineRunner {
     @Autowired
     JedisPool jedisPool;
+
     @Override
     public void run(String... args) throws Exception {
         log.info("初始化启动redis频道订阅");
         //订阅者
-        SubThread subThread = new SubThread(jedisPool,new Subscriber());
+        SubThread subThread = new SubThread(jedisPool, new Subscriber());
         subThread.start();
     }
+
+    @Bean
+    public ThreadPoolConfig getThreadPoolConfig() {
+        return new ThreadPoolConfig();
+    }
+
 }

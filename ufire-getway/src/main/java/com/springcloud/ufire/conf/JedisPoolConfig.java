@@ -14,6 +14,6 @@ import redis.clients.jedis.JedisPool;
 public class JedisPoolConfig {
     @Bean
     JedisPool getJedis() {
-        return new JedisPool("ufire-redis", 6379);
+        return new JedisPool("8.136.110.11", 6379);
     }
 }

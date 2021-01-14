@@ -32,10 +32,8 @@ public class ConsistencyChooseRule implements IChooseRule {
             if (originalUrl.getPath().contains("/socket")) {
                 try {
                     List<PathContainer.Element> elements = exchange.getRequest().getPath().elements();
-                    log.info("解析转发url:{} userId:{}", exchange.getRequest().getURI(), elements.get(elements.size() - 1));
                     String userId = elements.get(elements.size() - 1).value();
                     ServiceInstance server = hashRingConfig.getServer(userId);
-                    log.info("解析转发url:{} userId:{} 路由到:{} :{}", exchange.getRequest().getURI(), elements.get(elements.size() - 1), server.getHost(), server.getPort());
                     return server;
                 } catch (Exception e) {
                     //do nothing

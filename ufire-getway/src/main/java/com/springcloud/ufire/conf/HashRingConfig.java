@@ -1,6 +1,8 @@
 package com.springcloud.ufire.conf;
 
 import com.springcloud.ufire.entiy.HashRingEntity;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.ServiceInstance;
@@ -13,6 +15,7 @@ import java.util.*;
  * @author: fengandong
  * @create: 2021-01-05 11:11
  **/
+@Data
 public class HashRingConfig {
 
     private static final Logger log = LoggerFactory.getLogger(HashRingConfig.class);
@@ -22,6 +25,8 @@ public class HashRingConfig {
     private HashRingEntity hashRing;
 
     private List<ServiceInstance> instances;
+
+    private List<ServiceInstance> lastTimeInstances;
 
     /**
      * 修改hash环，将上次的节点hash值赋值给 lastTimeServerMap 保存
@@ -46,27 +51,25 @@ public class HashRingConfig {
         return this.hashRing;
     }
 
-    public void setInstances(List<ServiceInstance> instances) {
-        this.instances = instances;
-    }
-
 
     /**
      * 计算userId的hash值求得需要路由到的节点
      */
-    public ServiceInstance getServer(String UserId) {
-        int userHash = getHash(UserId);
+    public ServiceInstance getServer(String userId) {
+        int userHash = getHash(userId);
         SortedMap<Integer, String> serverMap = hashRing.getServerMap();
         // 遍历 有序Map serverHash从小到大  如果 serverHash  大于 userHash  则被视为第一个大于userHash的 hash值,
         // 第一个大于userHash 的 节点hash 就是需要路由到的节点如果是虚拟节点需解析获得真实节点。
         for (Integer serverHash : serverMap.keySet()) {
             if (serverHash > userHash) {
+                log.info("用户{}: hash:{},在serverMap有序SortedMap(hash环)上距离节点 hash:{} 最近", userId, userHash, serverHash);
                 ServiceInstance instance = getServiceInstance(serverMap, serverHash);
                 return instance;
             }
         }
         // 遍历完发现 userHash最大, 则路由到 serverhash节点环的第一个节点。
         Integer serverHash = serverMap.firstKey();
+        log.info("用户{}: hash:{},在serverMap有序SortedMap(hash环)上自己最大则指向serverMap的最小值即为第一个节点hash:{}", userId, userHash, serverHash);
         ServiceInstance instance = getServiceInstance(serverMap, serverHash);
         return instance;
     }
@@ -75,14 +78,18 @@ public class HashRingConfig {
      * 解析虚拟节点对应的真实节点，匹配对应的 instance 返回
      */
     private ServiceInstance getServiceInstance(SortedMap<Integer, String> serverMap, Integer serverHash) {
-        String server = serverMap.get(serverHash);
-        if (server.indexOf(("&&")) != -1) {
-            server = server.substring(0, server.indexOf("&&"));
+        String node = serverMap.get(serverHash);
+        String server = null;
+        if (node.indexOf(("&&")) != -1) {
+            server = node.substring(0, node.indexOf("&&"));
+        } else {
+            server = node;
         }
         String host = server.substring(0, server.indexOf(":"));
         String port = server.substring(server.indexOf(":") + 1, server.length());
         for (ServiceInstance instance : instances) {
             if (instance.getHost().equals(host) && instance.getPort() == Integer.parseInt(port)) {
+                log.info("通过解析最近的节点hash:{}，得到节点:{},路由到websocket实例:{}", serverHash, node, instance.getUri());
                 return instance;
             }
         }
@@ -127,5 +134,44 @@ public class HashRingConfig {
         serverMap.putAll(virtualServerMap);
         hashRing.setServerMap(serverMap);
         this.hashRing = hashRing;
+    }
+
+    public void retryUser() {
+        List<String> newServer = new ArrayList<>(10);
+        if (instances.size() < lastTimeInstances.size()) {
+            return;
+        }
+//        instances.stream()
+//
+////        instances.stream().forEach(instance -> {
+////            if (!lastTimeInstances.contains(instance)) {
+////                newServer.add(instance.getHost() + ":" + instance.getPort());
+////            }
+////        });
+
+        SortedMap<Integer, String> tempMap = new TreeMap<>();
+        SortedMap<Integer, String> userMap = hashRing.getUserMap();
+        tempMap.putAll(hashRing.getUserMap());
+        tempMap.putAll(hashRing.getServerMap());
+        Iterator<Map.Entry<Integer, String>> it = userMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Integer, String> entry = it.next();
+            int key = entry.getKey();
+            String userId = entry.getValue();
+            SortedMap<Integer, String> thanUserMap = ((TreeMap<Integer, String>) tempMap).tailMap(key);  //大于user hash的部分map
+            Iterator<Map.Entry<Integer, String>> thanIt = userMap.entrySet().iterator();
+            while (thanIt.hasNext()) {
+                Map.Entry<Integer, String> thanUser = thanIt.next();
+                String value = thanUser.getValue();
+                for (String server : newServer) {
+                    if (value.indexOf(server) != -1) {
+                        log.info("用户{}需要重新进行链接到{}", userId, getServiceInstance(hashRing.getServerMap(), thanUser.getKey()).getUri());
+                        break;
+                    }
+                }
+                break;
+            }
+
+        }
     }
 }

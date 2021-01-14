@@ -16,6 +16,6 @@ public class JedisConfig {
          * */
         @Bean
         public JedisPool getJedisPool(){
-            return new JedisPool("123.57.139.87",6379);
+            return new JedisPool("8.136.110.11",6379);
         }
 }
