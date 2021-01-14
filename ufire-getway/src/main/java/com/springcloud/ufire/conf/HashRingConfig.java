@@ -137,7 +137,10 @@ public class HashRingConfig {
         this.hashRing = hashRing;
     }
 
-    public void retryUser() {
+    /**
+     * 增加真实节点后重置一部分user的连接
+     */
+    public void resetUser() {
         if (instances.size() < lastTimeInstances.size()) {
             return;
         }
@@ -150,30 +153,23 @@ public class HashRingConfig {
             lastServer.add(instance.getHost() + ":" + instance.getPort());
         }
         List<String> newServer = nowServer.stream().filter(server -> !lastServer.contains(server)).collect(Collectors.toList());
-
-        SortedMap<Integer, String> tempMap = new TreeMap<>();
         SortedMap<Integer, String> userMap = hashRing.getUserMap();
-        tempMap.putAll(hashRing.getUserMap());
-        tempMap.putAll(hashRing.getServerMap());
+        SortedMap<Integer, String> serverMap = hashRing.getServerMap();
         Iterator<Map.Entry<Integer, String>> it = userMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Integer, String> entry = it.next();
-            int key = entry.getKey();
-            String userId = entry.getValue();
-            SortedMap<Integer, String> thanUserMap = ((TreeMap<Integer, String>) tempMap).tailMap(key);  //大于user hash的部分map
-            Iterator<Map.Entry<Integer, String>> thanIt = userMap.entrySet().iterator();
-            while (thanIt.hasNext()) {
-                Map.Entry<Integer, String> thanUser = thanIt.next();
-                String value = thanUser.getValue();
-                for (String server : newServer) {
-                    if (value.indexOf(server) != -1) {
-                        log.info("用户{}需要重新进行链接到{}", userId, getServiceInstance(hashRing.getServerMap(), thanUser.getKey()).getUri());
-                        break;
-                    }
+        for (String server : newServer) {
+            while (it.hasNext()) {
+                Map.Entry<Integer, String> user = it.next();
+                int userHash = user.getKey();
+                String userId = user.getValue();
+                serverMap.put(userHash, userId);
+                SortedMap<Integer, String> thanUserMap = ((TreeMap<Integer, String>) serverMap).tailMap(userHash);  //大于user hash的部分map
+                thanUserMap.remove(userHash, userId);
+                Integer firstKey = thanUserMap.firstKey();
+                String value = thanUserMap.get(firstKey);
+                if (value.indexOf(server) != -1) {
+                    log.info("用户{}需要重新进行链接到", userId);
                 }
-                break;
             }
-
         }
     }
 }
