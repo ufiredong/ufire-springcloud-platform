@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.ServiceInstance;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @program: ufire-springcloud-platform
@@ -137,17 +138,18 @@ public class HashRingConfig {
     }
 
     public void retryUser() {
-        List<String> newServer = new ArrayList<>(10);
         if (instances.size() < lastTimeInstances.size()) {
             return;
         }
-//        instances.stream()
-//
-////        instances.stream().forEach(instance -> {
-////            if (!lastTimeInstances.contains(instance)) {
-////                newServer.add(instance.getHost() + ":" + instance.getPort());
-////            }
-////        });
+        List<String> nowServer = new ArrayList<>();
+        List<String> lastServer = new ArrayList<>();
+        for (ServiceInstance instance : instances) {
+            nowServer.add(instance.getHost() + ":" + instance.getPort());
+        }
+        for (ServiceInstance instance : lastTimeInstances) {
+            lastServer.add(instance.getHost() + ":" + instance.getPort());
+        }
+        List<String> newServer = nowServer.stream().filter(server -> !lastServer.contains(server)).collect(Collectors.toList());
 
         SortedMap<Integer, String> tempMap = new TreeMap<>();
         SortedMap<Integer, String> userMap = hashRing.getUserMap();
