@@ -33,19 +33,17 @@ public class ServiceStatusListner {
         NamingService naming = NamingFactory.createNamingService(properties);
         // 每次ufire-websocket实例发生上线事件即更新redis
         Jedis jedis = jedisPool.getResource();
-        naming.subscribe(Constants.UFIRE_WEBSOCKET_REDIS_KEY, new EventListener() {
+        naming.subscribe("ufire-websocket", new EventListener() {
             @Override
             public void onEvent(Event event) {
                 List<Instance> instances = ((NamingEvent) event).getInstances();
-                jedis.del(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
+                jedis.del("ufire-websocket");
                 for (Instance instance : instances) {
                     String realNode = instance.getIp() + ":" + instance.getPort();
                     int realNodeHash = HashRingUtil.getHash(realNode);
-                    jedis.hset(Constants.UFIRE_WEBSOCKET_REDIS_KEY, String.valueOf(realNodeHash), realNode);
+                    jedis.hset("ufire-websocket", String.valueOf(realNodeHash), realNode);
                 }
-                jedis.close();
-                PublishThread publishThread = new PublishThread(jedisPool, "ufire-websocket 实例节点 down/up了");
-                publishThread.start();
+                jedis.publish("serverUpdate", "ufire-websocket 实例节点 down/up了");
             }
         });
     }
