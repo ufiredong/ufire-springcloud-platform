@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="MbgTables" targetRuntime="MyBatis3">
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/> <!-- &quot; -->
+        <property name="endingDelimiter" value="`"/>
+
+
+        <!-- ExampleBase plugins -->
+        <plugin type="mboog.generator.plugins.RulesDelegatePlugin"/>
+        <plugin type="mboog.generator.plugins.ColumnIsPlugin"/>
+        <plugin type="mboog.generator.plugins.ExampleBasePlugin"/>
+        <plugin type="mboog.generator.plugins.ExampleCPlugin"/>
+        <plugin type="mboog.generator.plugins.CommonWhereClausePlugin"/>
+
+        <!-- Pagination plugins   MySQLPaginationPlugin,OraclePaginationPlugin,PostgreSQLPaginationPlugin-->
+
+        <plugin type="mboog.generator.plugins.pagination.MySQLPaginationPlugin"/>
+
+
+        <!-- Upsert plugins   MySQLUpsertPlugin -->
+        <plugin type="mboog.generator.plugins.upsert.MySQLUpsertPlugin"/>
+
+        <plugin type="mboog.generator.plugins.BatchInsertPlugin"/>
+
+        <plugin type="mboog.generator.plugins.OptimisticLockPlugin"/>
+
+        <!-- Example Criterion plugins-->
+        <plugin type="mboog.generator.plugins.CriterionPlugin"/>
+
+        <!-- Select column plugins -->
+        <plugin type="mboog.generator.plugins.ColumnListPlugin"/>
+
+        <!-- Mapper generator plugins -->
+        <plugin type="mboog.generator.plugins.MapperGeneratorPlugin"/>
+
+        <!-- Service generator plugins -->
+        <plugin type="mboog.generator.plugins.ServiceGeneratorPlugin"/>
+
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.VirtualPrimaryKeyPlugin"/>
+
+        <commentGenerator>
+            <property name="addRemarkComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://8.136.110.11:3306/rabbitmq?characterEncoding=utf8&amp;useInformationSchema=True"
+                        userId="root"
+                        password="123456">
+        </jdbcConnection>
+
+        <javaTypeResolver type="mboog.generator.internal.types.JavaTypeResolverImpl">
+            <property name="forceBigDecimals" value="false"/>
+            <property name="jsr310" value="true"/>
+            <property name="tinyintToInteger" value="true"/>
+            <property name="smallintToInteger" value="true"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.springcloud.ufire.core.model" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="com.springcloud.ufire.core.mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.springcloud.ufire.core.mapper"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <table schema="" tableName="message_user" domainObjectName="MessageUser"></table>
+    </context>
+</generatorConfiguration>
