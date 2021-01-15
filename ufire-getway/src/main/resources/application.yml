@@ -16,4 +16,4 @@ spring:
     password: 123456
     driverClassName: com.mysql.jdbc.Driver
 mybatis:
-  mapper-locations: classpath：com.springcloud.ufire.core.mapper/*.xml
+  mapper-locations: classpath:com.springcloud.ufire.core.mapper/*.xml

@@ -12,6 +12,13 @@ spring:
   redis.minIdle: 1
   redis.testOnBorrow: true
   redis.testOnReturn: true
+  datasource:
+    url: jdbc:mysql://8.136.110.11:3306/rabbitmq?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+    driverClassName: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath：com.springcloud.ufire.core.mapper/*.xml
 
 #server:
 #  port: 8885
