@@ -76,6 +76,7 @@
                              targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
-        <table schema="" tableName="message_user" domainObjectName="MessageUser"></table>
+        <table schema="" tableName="reset_user" domainObjectName="ResetUser"></table>
+        <table schema="" tableName="broker_message_log" domainObjectName="MessageLog"></table>
     </context>
 </generatorConfiguration>
