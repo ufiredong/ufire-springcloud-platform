@@ -1,8 +1,6 @@
 package com.springcloud.ufire.conf;
-
 import com.springcloud.ufire.filter.CustomLoadBalancerClientFilter;
 import com.springcloud.ufire.rule.IChooseRule;
-import com.springcloud.ufire.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 

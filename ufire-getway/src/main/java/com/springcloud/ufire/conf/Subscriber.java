@@ -1,6 +1,5 @@
 package com.springcloud.ufire.conf;
-
-import com.springcloud.ufire.util.SpringUtil;
+import com.springcloud.ufire.core.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.ServiceInstance;
@@ -11,7 +10,6 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 import java.util.List;
 import java.util.Map;
-
 /**
  * @description: 监听 注册中心节点变动
  * @author: fengandong
@@ -48,7 +46,7 @@ public class Subscriber extends JedisPubSub {
         hashRingConfig.addVirtualNode(hashRingConfig.getHashRing());
         log.info("本次节点变动-虚拟节点插入完毕 {} ", hashRingConfig.getHashRing().getServerMap());
         log.info("上次节点变动 {} ", hashRingConfig.getHashRing().getLastTimeServerMap());
-        hashRingConfig.retryUser();
+        //hashRingConfig.retryUser();
     }
 
     @Override
