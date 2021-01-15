@@ -1,11 +1,20 @@
 package com.springcloud.ufire.getway.conf;
 
+import com.springcloud.ufire.core.mapper.MessageLogMapper;
+import com.springcloud.ufire.core.mapper.ResetUserMapper;
+import com.springcloud.ufire.core.model.MessageLog;
+import com.springcloud.ufire.core.model.ResetUser;
 import com.springcloud.ufire.getway.entiy.HashRingEntity;
+import com.springcloud.ufire.getway.producer.RabbitResetUserSender;
+import com.springcloud.ufire.getway.producer.ResetUserSender;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 
+import javax.annotation.Resource;
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -139,10 +148,11 @@ public class HashRingConfig {
     /**
      * 增加真实节点后重置一部分user的连接
      */
-    public void resetUser() {
+    public List<ResetUser> getResetUserList() {
         if (instances.size() < lastTimeInstances.size()) {
-            return;
+            return null;
         }
+        List<ResetUser> resetUsers = new ArrayList<>();
         List<String> nowServer = new ArrayList<>();
         List<String> lastServer = new ArrayList<>();
         for (ServiceInstance instance : instances) {
@@ -167,8 +177,15 @@ public class HashRingConfig {
                 String value = thanUserMap.get(firstKey);
                 if (value.indexOf(server) != -1) {
                     log.info("用户{}需要重新进行链接到", userId);
+                    ResetUser resetUser = new ResetUser();
+                    resetUser.setMessageId(UUID.randomUUID().toString());
+                    resetUser.setName("用户:" + userId);
+                    resetUser.setReconnect(getServer(userId).getUri().toString());
+                    resetUsers.add(resetUser);
                 }
             }
         }
+        return resetUsers;
     }
+
 }
