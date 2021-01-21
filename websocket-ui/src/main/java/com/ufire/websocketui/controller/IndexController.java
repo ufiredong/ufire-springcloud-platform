@@ -1,5 +1,7 @@
 package com.ufire.websocketui.controller;
 
+import com.ufire.websocketui.dockerApi.DockerRestApi;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,12 +23,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Controller
 @RequestMapping(value = "/websocket")
 public class IndexController {
-    private static AtomicInteger userId = new AtomicInteger();
-    private static Map<HttpServletRequest, String> requestSessionPools = new HashMap<>();
+    @Autowired
+    private DockerRestApi dockerRestApi;
 
     @GetMapping("/index")
     public String inedx() {
-//        userId = new AtomicInteger();
+        dockerRestApi.dockerPs();
         return "index";
     }
 
@@ -37,15 +39,7 @@ public class IndexController {
         return "client";
     }
 
-    public String setUserId() {
 
-
-        return "";
-    }
-
-    public static void addUserId() {
-        userId.incrementAndGet();
-    }
 
 
 }
