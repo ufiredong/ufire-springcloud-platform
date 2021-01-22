@@ -2,8 +2,9 @@ package com.springcloud.ufire.getway.conf;
 
 import com.springcloud.ufire.core.constant.Constants;
 import com.springcloud.ufire.core.model.ResetUser;
-import com.springcloud.ufire.core.util.SpringUtil;
 import com.springcloud.ufire.getway.service.ResetUserService;
+import com.springcloud.ufire.getway.utils.SpringUtil;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.ServiceInstance;
@@ -15,6 +16,7 @@ import redis.clients.jedis.JedisPubSub;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @description: 监听 注册中心节点变动
@@ -26,8 +28,11 @@ public class Subscriber extends JedisPubSub {
     private static final Logger log = LoggerFactory.getLogger(Subscriber.class);
     private ThreadPoolConfig threadPoolConfig;
 
+    @SneakyThrows
     @Override
     public void onMessage(String channel, String message) {
+
+        //upDateServers(channel, message);
         threadPoolConfig = (ThreadPoolConfig) SpringUtil.getBean("threadPoolConfig");
         threadPoolConfig.buildThreadPool().execute(() ->
                 {
@@ -49,7 +54,8 @@ public class Subscriber extends JedisPubSub {
         JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
         Jedis jedis = jedisPool.getResource();
         Map<String, String> serverMap = jedis.hgetAll(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
-        Map<String, String> userMap = jedis.hgetAll(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
+        Map<String, String> userMap = jedis.hgetAll(Constants.USER_REDIS_KEY);
+        jedis.close();
         List<ServiceInstance> instances = discoveryClient.getInstances(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
         hashRingConfig.setLastTimeInstances(hashRingConfig.getInstances());
         hashRingConfig.setInstances(instances);
@@ -59,7 +65,10 @@ public class Subscriber extends JedisPubSub {
         log.info("本次节点变动-虚拟节点插入完毕 {} ", hashRingConfig.getHashRing().getServerMap());
         log.info("上次节点变动 {} ", hashRingConfig.getHashRing().getLastTimeServerMap());
         List<ResetUser> resetUserList = hashRingConfig.getResetUserList();
-        resetUserService.resetUserSend(resetUserList);
+        if(Objects.nonNull(resetUserList)){
+            resetUserService.resetUserSend(resetUserList);
+        }
+
     }
 
     @Override

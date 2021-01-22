@@ -44,7 +44,7 @@ public class ResetUserService {
             messageLog.setUpdateTime(LocalDateTime.now());
             messageLogMapper.insertSelective(messageLog);
             // 发送消息
-            rabbitResetUserSender.sendOrder(resetUser);
+            rabbitResetUserSender.send(resetUser);
         }
 
     }

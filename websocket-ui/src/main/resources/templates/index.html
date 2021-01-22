@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <style>
         * {
@@ -176,9 +176,18 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<div id="div1">
+    <table>
+        <tr><th>ID</th></tr>
+        <tr th:each = "containerVo:${containerVoList}">
+            <td th:text = "${containerVo.id}"></td>
+        </tr>
+    </table>
+</div>
 
 <button type="button" id="add" onclick="add(1)">add</button>
 <button type="button" id="group" onclick="group()">group</button>
+<button type="button" id="group1" onclick="ref()">group1</button>
 <input id="count" value=10>
 <div class="mainFrame">
     <div class="contentFrame">
@@ -206,6 +215,7 @@
 <script id="s1" src="http://drag.js.org/blyde.min.js"></script>
 <script id="s2" src="http://drag.js.org/dist/drag.min.js"></script>
 <script id="s3" src="http://drag.js.org/demo.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 <script>
 
     var userIdCount = 0;
@@ -273,6 +283,11 @@
                 div2222.appendChild(client)
             }
         }
+    }
+    
+    function ref() {
+        console.info($('#div1'));
+        $('#div1').load("http://localhost:9876/websocket/containerList");
     }
 
 </script>

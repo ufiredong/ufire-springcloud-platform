@@ -176,10 +176,10 @@ public class HashRingConfig {
                 Integer firstKey = thanUserMap.firstKey();
                 String value = thanUserMap.get(firstKey);
                 if (value.indexOf(server) != -1) {
-                    log.info("用户{}需要重新进行链接到", userId);
                     ResetUser resetUser = new ResetUser();
                     resetUser.setMessageId(UUID.randomUUID().toString());
                     resetUser.setName("用户:" + userId);
+                    resetUser.setUserId(userId);
                     resetUser.setReconnect(getServer(userId).getUri().toString());
                     resetUsers.add(resetUser);
                 }

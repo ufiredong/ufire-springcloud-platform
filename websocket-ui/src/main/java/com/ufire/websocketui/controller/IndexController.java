@@ -1,5 +1,12 @@
 package com.ufire.websocketui.controller;
 
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.ContainerPort;
+import com.ufire.websocketui.utils.DockerClientUtil;
+import com.ufire.websocketui.utils.LocalDateTimeUtils;
+import com.ufire.websocketui.vo.ContainerVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.Session;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @program: ufire-springcloud-platform
@@ -21,9 +30,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Controller
 @RequestMapping(value = "/websocket")
 public class IndexController {
-    private static AtomicInteger userId = new AtomicInteger();
-    private static Map<HttpServletRequest, String> requestSessionPools = new HashMap<>();
-
+    @Autowired
+    private  DockerClient dockerClient;
     @GetMapping("/index")
     public String inedx() {
 //        userId = new AtomicInteger();
@@ -36,16 +44,20 @@ public class IndexController {
         model.addAttribute("userId",userId);
         return "client";
     }
-
-    public String setUserId() {
-
-
-        return "";
+    @GetMapping("/containerList")
+    public String list(@Autowired Model model){
+        List<ContainerVo> containerVoList=new ArrayList<>();
+        List<Container> exec = dockerClient.listContainersCmd().exec();
+        List<Container> websocket = exec.stream().filter(container -> container.getImage().equals("ufire-websocket")).collect(Collectors.toList());
+        websocket.stream().forEach(container->{
+            ContainerVo containerVo = new ContainerVo();
+            containerVo.setId(container.getId());
+            containerVo.setCreatTime(LocalDateTimeUtils.toLocalDateTime(container.getCreated()));
+            containerVo.setStatus(container.getStatus());
+            containerVoList.add(containerVo);
+        });
+        model.addAttribute("containerVoList",containerVoList);
+        return "index::div1";
     }
-
-    public static void addUserId() {
-        userId.incrementAndGet();
-    }
-
 
 }

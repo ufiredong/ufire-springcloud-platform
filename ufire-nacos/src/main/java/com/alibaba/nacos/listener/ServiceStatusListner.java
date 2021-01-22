@@ -44,6 +44,7 @@ public class ServiceStatusListner {
                     jedis.hset("ufire-websocket", String.valueOf(realNodeHash), realNode);
                 }
                 jedis.publish("serverUpdate", "ufire-websocket 实例节点 down/up了");
+                jedis.close();
             }
         });
     }
