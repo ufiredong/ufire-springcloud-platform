@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <style>
         * {
@@ -19,7 +19,6 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #ECECEC;
         }
 
         h1 {
@@ -44,12 +43,20 @@
 
         .contentFrame {
             position: relative;
-            padding: 40px 40px;
             width: 100%;
             max-width: 1800px;
             margin: 0 auto;
             background-color: #FFF;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.30);
+        }
+        .container {
+            font-size: 12px;
+            position: relative;
+            width: 1200px;
+            max-width: 1800px;
+            margin: 0 auto;
+            background-color: #FFF;
+            border: 1px solid #DEDEDE;
+            border-radius: 3px;
         }
 
         a {
@@ -137,36 +144,49 @@
         dragcase > .listItem {
             border-bottom: 0;
         }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
 
-        .item {
-            cursor: move;
+        td,th {
+            padding: 0;
+        }
+
+        .pure-table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+            border: 1px solid #cbcbcb;
+        }
+
+        .pure-table caption {
+            color: #000;
+            font: italic 85%/1 arial,sans-serif;
+            padding: 1em 0;
             text-align: center;
-            background-color: #F8F8F8;
         }
 
-        .item.huge {
-            height: 200px;
-            width: 200px;
-            line-height: 198px;
+        .pure-table td,.pure-table th {
+            border-left: 1px solid #cbcbcb;
+            border-width: 0 0 0 1px;
+            font-size: inherit;
+            margin: 0;
+            overflow: visible;
+            padding: .5em 1em;
         }
 
-        .item.big {
-            height: 150px;
-            width: 150px;
-            line-height: 148px;
+        .pure-table thead {
+            background-color: #e0e0e0;
+            color: #000;
+            text-align: left;
+            vertical-align: bottom;
         }
 
-        .item.small {
-            height: 100px;
-            width: 100px;
-            line-height: 98px;
+        .pure-table td {
+            background-color: transparent;
         }
 
-        .item.tiny {
-            height: 50px;
-            width: 50px;
-            line-height: 48px;
-        }
     </style>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -177,9 +197,27 @@
     <title>Title</title>
 </head>
 
+
 <button type="button" id="add" onclick="add(1)">add</button>
 <button type="button" id="group" onclick="group()">group</button>
+<button type="button" id="group1" onclick="div1()">group1</button>
 <input id="count" value=10>
+<div   id="div1" th:fragment="div1" class="container">
+    <table  class="pure-table" style="border-left-style: solid;border-left-width: 0px;margin-left: 200px;margin-right: 200px;">
+        <tr><th >ID</th><th>name</th><th>ip</th><th>port</th><th>status</th><th>state</th><th>create</th><th>operat</th></tr>
+        <tr th:each = "containerVo:${containerVoList}">
+            <td th:text = "${containerVo.id}" ></td>
+            <td th:text = "${containerVo.name}" ></td>
+            <td th:text = "${containerVo.ip}" ></td>
+            <td th:text = "${containerVo.port}" ></td>
+            <td th:text = "${containerVo.status}" ></td>
+            <td th:text = "${containerVo.state}" ></td>
+            <td th:text = "${containerVo.creatTime}"></td>
+          <!--//  <td><a th:href="${containerVo.operat}" onclick="operat()">start</a></td>-->
+            <td><a id="status" style="font-size: 8px;width:40px; height:18px" onclick="operat()">start</a></td>
+        </tr>
+    </table>
+</div>
 <div class="mainFrame">
     <div class="contentFrame">
         <div>
@@ -206,7 +244,10 @@
 <script id="s1" src="http://drag.js.org/blyde.min.js"></script>
 <script id="s2" src="http://drag.js.org/dist/drag.min.js"></script>
 <script id="s3" src="http://drag.js.org/demo.min.js"></script>
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script> var jq214 = jQuery.noConflict(true); </script>
 <script>
+
 
     var userIdCount = 0;
 
@@ -273,6 +314,19 @@
                 div2222.appendChild(client)
             }
         }
+    }
+
+
+</script>
+<script>
+    jq214(function($){
+        //此时的$是jQuery-2.1.4
+        $('#div1').load("http://localhost:9876/websocket/containerList");
+
+
+    });
+    function operat() {
+        jq214('#div1').load("http://localhost:9876/websocket/containerList");
     }
 
 </script>
