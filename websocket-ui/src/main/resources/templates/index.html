@@ -214,7 +214,7 @@
             <td th:text = "${containerVo.state}" ></td>
             <td th:text = "${containerVo.creatTime}"></td>
           <!--//  <td><a th:href="${containerVo.operat}" onclick="operat()">start</a></td>-->
-            <td><a id="status" style="font-size: 8px;width:40px; height:18px" onclick="operat()">start</a></td>
+            <td><button  class="operat" th:operat= "${containerVo.creatTime}"  th:cid= "${containerVo.id}" style="font-size: 8px;width:40px; height:18px"; >start</button></td>
         </tr>
     </table>
 </div>
@@ -316,18 +316,28 @@
         }
     }
 
+    // function operat(id) {
+    //     console.info("id");
+    //     if(confirm("stop?")){
+    //
+    //         jq214('#div1').load("http://localhost:9876/websocket/containerList");
+    //     }
+    //
+    // }
+
 
 </script>
 <script>
+
     jq214(function($){
         //此时的$是jQuery-2.1.4
         $('#div1').load("http://localhost:9876/websocket/containerList");
-
+        $('.operat').onclick(function () {
+            console.info("yes");
+        })
 
     });
-    function operat() {
-        jq214('#div1').load("http://localhost:9876/websocket/containerList");
-    }
+
 
 </script>
 </html>
