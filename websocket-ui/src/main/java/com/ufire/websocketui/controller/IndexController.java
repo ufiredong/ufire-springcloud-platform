@@ -1,26 +1,22 @@
 package com.ufire.websocketui.controller;
 
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.model.Container;
-import com.github.dockerjava.api.model.ContainerPort;
+import com.github.dockerjava.api.command.InfoCmd;
+import com.github.dockerjava.api.command.ListContainersCmd;
+import com.github.dockerjava.api.command.ListServicesCmd;
+import com.github.dockerjava.api.model.Service;
 import com.ufire.websocketui.utils.DockerClientUtil;
 import com.ufire.websocketui.utils.LocalDateTimeUtils;
 import com.ufire.websocketui.vo.ContainerVo;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.model.Container;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.websocket.Session;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -33,64 +29,60 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/websocket")
 public class IndexController {
     @Autowired
-    private  DockerClient dockerClient;
+    private DockerClient dockerClient;
+    @Autowired
+    private DockerClientUtil dockerClientUtil;
+
     @GetMapping("/index")
     public String inedx() {
-//        userId = new AtomicInteger();
         return "index";
     }
 
     @GetMapping("/client")
 
     public String client(Model model, String userId) {
-        model.addAttribute("userId",userId);
+        model.addAttribute("userId", userId);
         return "client";
     }
+
     @GetMapping("/containerList")
-    public String list(@Autowired Model model, @RequestParam(required = false) String operat,@RequestParam(required = false) String iid){
-        List<ContainerVo> containerVoList=new ArrayList<>();
-        List<Container> exec = dockerClient.listContainersCmd().exec();
-        List<Container> websocket = exec.stream().filter(container -> container.getImage().equals("ufire-websocket")).collect(Collectors.toList());
-            websocket.stream().forEach(container->{
+    public String list(@Autowired Model model, @RequestParam(required = false) String operat, @RequestParam(required = false) String id) {
+        if (Objects.nonNull(operat)) {
+            if (operat.equals("1")) {
+                dockerClientUtil.startContainer(dockerClient, id);
+            }
+            if (operat.equals("2")) {
+                dockerClientUtil.stopContainer(dockerClient, id);
+            }
+            if (operat.equals("3")) {
+                dockerClientUtil.removeContainer(dockerClient, id);
+            }
+            if (operat.equals("4")) {
+                dockerClientUtil.createContainers(dockerClient,"ufire-websocket-"+(int)((Math.random()*9+1)*100000),"ufire-websocket");
+            }
+        }
+        getList(model);
+        return "index::div1";
+    }
+
+    private void getList(@Autowired Model model) {
+        List<ContainerVo> containerVoList = new ArrayList<>();
+        ListContainersCmd listContainersCmd = dockerClient.listContainersCmd();
+        listContainersCmd.withShowAll(true).getFilters().put("name", Arrays.asList("ufire-websocket"));
+        List<Container> containers = listContainersCmd.exec();
+        containers.stream().filter(container -> !container.getImage().equals("ufire-websocket-ui")).forEach(container -> {
             ContainerVo containerVo = new ContainerVo();
-            String id=container.getId().substring(0,6);
+            String id = container.getId().substring(0, 6);
             containerVo.setId(id);
             containerVo.setStatus(container.getStatus());
-
             containerVo.setIp(container.getNetworkSettings().getNetworks().get("ufire-springcloud-platform_default").getIpAddress());
             containerVo.setPort("80");
             containerVo.setName(Arrays.asList(container.getNames()).get(0));
             containerVo.setCreatTime(LocalDateTimeUtils.toLocalDateTime(container.getCreated()));
             containerVo.setStatus(container.getStatus());
             containerVo.setState(container.getState());
-            containerVo.setOperat("containerList?operat=start&id="+id);
             containerVoList.add(containerVo);
         });
-        model.addAttribute("containerVoList",containerVoList);
-        return "index::div1";
+        model.addAttribute("containerVoList", containerVoList);
     }
-//    @GetMapping("{operat}/{id}")
-//    public String list(@Autowired Model model, @PathVariable("operat") String operat,@PathVariable("id") String oid){
-//        List<ContainerVo> containerVoList=new ArrayList<>();
-//        List<Container> exec = dockerClient.listContainersCmd().exec();
-//        List<Container> websocket = exec.stream().filter(container -> container.getImage().equals("ufire-websocket")).collect(Collectors.toList());
-//        websocket.stream().forEach(container->{
-//            ContainerVo containerVo = new ContainerVo();
-//            String id=container.getId().substring(0,6);
-//            containerVo.setId(id);
-//            containerVo.setStatus(container.getStatus());
-//            containerVo.setIp("192.168.1.1");
-//            containerVo.setPort("80");
-//            containerVo.setName(Arrays.asList(container.getNames()).get(0));
-//            containerVo.setCreatTime(LocalDateTimeUtils.toLocalDateTime(container.getCreated()));
-//            containerVo.setStatus(container.getStatus());
-//            containerVo.setOperat("start/"+id);
-//            containerVoList.add(containerVo);
-//        });
-//        model.addAttribute("containerVoList",containerVoList);
-//        return "index::div1";
-//    }
-
-
-
 }

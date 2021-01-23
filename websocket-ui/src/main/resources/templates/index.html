@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:display="http://www.w3.org/1999/xhtml">
 <head>
     <style>
         * {
@@ -48,6 +48,7 @@
             margin: 0 auto;
             background-color: #FFF;
         }
+
         .container {
             font-size: 12px;
             position: relative;
@@ -144,12 +145,13 @@
         dragcase > .listItem {
             border-bottom: 0;
         }
+
         table {
             border-collapse: collapse;
             border-spacing: 0;
         }
 
-        td,th {
+        td, th {
             padding: 0;
         }
 
@@ -157,17 +159,16 @@
             border-collapse: collapse;
             border-spacing: 0;
             empty-cells: show;
-            border: 1px solid #cbcbcb;
         }
 
         .pure-table caption {
             color: #000;
-            font: italic 85%/1 arial,sans-serif;
+            font: italic 85%/1 arial, sans-serif;
             padding: 1em 0;
             text-align: center;
         }
 
-        .pure-table td,.pure-table th {
+        .pure-table td, .pure-table th {
             border-left: 1px solid #cbcbcb;
             border-width: 0 0 0 1px;
             font-size: inherit;
@@ -196,25 +197,65 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<div id="div1" th:fragment="div1" class="container">
+    <table class="pure-table" style="border-left-style: solid;border-left-width: 0px;margin-left: 100px; display: inline">
+        <tr>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td><a type="button" onclick="operat('add')" style="color:blue">新增websocket服务容器</a>
+            </td>
+        </tr>
+        <tr>
+            <td><a type="button" onclick="refresh()" style="color:blue">刷新容器列表</a>
+            </td>
+        </tr>
+        <tr>
+            <td><a type="button" onclick="add(1)" style="color:blue">新增一个websocket客户端</a>
+            </td>
+        </tr>
+    </table>
+    <table class="pure-table" style="border-left-style: solid;border-left-width: 0px; display: inline">
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>ip</th>
+            <th>端口</th>
+            <th>运行情况</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="containerVo:${containerVoList}">
+
+            <td th:text="${containerVo.id}"></td>
+            <td th:text="${containerVo.name}"></td>
+            <td th:text="${containerVo.ip}"></td>
+            <td th:text="${containerVo.port}"></td>
+            <td th:text="${containerVo.status}"></td>
+            <td th:text="${containerVo.state}"></td>
+            <td th:text="${containerVo.creatTime}"></td>
+            <!--//  <td><a th:href="${containerVo.operat}" onclick="operat()">start</a></td>-->
+            <td>
+                <a th:operat="${containerVo.operat}" id="stop"
+                   th:cid="${containerVo.id}"
+                   th:if="${containerVo.state eq 'running'}" onclick="operat('stop')"
+                   style="font-size: 8px;width:40px; height:18px;text-decoration:underline; color:blue" ;>stop
+                </a>
+                <a class="operat" th:operat="${containerVo.operat}" id="start" th:cid="${containerVo.id}"
+                   th:if="${containerVo.state eq 'exited'} or ${containerVo.state eq 'created'}"
+                   onclick="operat('start')"
+                   style="font-size: 8px;width:40px; height:18px;text-decoration:underline; color:blue" ;>start
+                </a>&nbsp;&nbsp;&nbsp;
+                <a class="operat" th:operat="${containerVo.operat}" id="remove" th:cid="${containerVo.id}"
+                   th:if="${containerVo.state eq 'exited'}" onclick="operat('remove')"
+                   style="font-size: 8px;width:60px; height:18px;text-decoration:underline; color:blue" ;>remove
+                </a>
+            </td>
 
 
-<button type="button" id="add" onclick="add(1)">add</button>
-<button type="button" id="group" onclick="group()">group</button>
-<button type="button" id="group1" onclick="div1()">group1</button>
-<input id="count" value=10>
-<div   id="div1" th:fragment="div1" class="container">
-    <table  class="pure-table" style="border-left-style: solid;border-left-width: 0px;margin-left: 200px;margin-right: 200px;">
-        <tr><th >ID</th><th>name</th><th>ip</th><th>port</th><th>status</th><th>state</th><th>create</th><th>operat</th></tr>
-        <tr th:each = "containerVo:${containerVoList}">
-            <td th:text = "${containerVo.id}" ></td>
-            <td th:text = "${containerVo.name}" ></td>
-            <td th:text = "${containerVo.ip}" ></td>
-            <td th:text = "${containerVo.port}" ></td>
-            <td th:text = "${containerVo.status}" ></td>
-            <td th:text = "${containerVo.state}" ></td>
-            <td th:text = "${containerVo.creatTime}"></td>
-          <!--//  <td><a th:href="${containerVo.operat}" onclick="operat()">start</a></td>-->
-            <td><button  class="operat" th:operat= "${containerVo.creatTime}"  th:cid= "${containerVo.id}" style="font-size: 8px;width:40px; height:18px"; >start</button></td>
+            <!--                <button  class="operat" th:operat= "${containerVo.operat}"  th:cid= "${containerVo.id}" style="font-size: 8px;width:40px; height:18px";  th:if="${containerVo.state eq running }"></button></td>-->
         </tr>
     </table>
 </div>
@@ -316,27 +357,64 @@
         }
     }
 
-    // function operat(id) {
-    //     console.info("id");
-    //     if(confirm("stop?")){
-    //
-    //         jq214('#div1').load("http://localhost:9876/websocket/containerList");
-    //     }
-    //
-    // }
+    function start(id) {
+        console.info("id");
+        if (confirm("stop?")) {
+
+            jq214('#div1').load("http://localhost:9876/websocket/containerList");
+        }
+
+    }
 
 
 </script>
 <script>
 
-    jq214(function($){
+    jq214(function ($) {
         //此时的$是jQuery-2.1.4
-        $('#div1').load("http://localhost:9876/websocket/containerList");
-        $('.operat').onclick(function () {
-            console.info("yes");
-        })
-
+        refresh()
     });
+
+    function refresh(operation) {
+        jq214('#div1').load("http://localhost:9876/websocket/containerList");
+    }
+
+    function operat(operation) {
+
+        if (operation == "start") {
+
+
+            var cid = jq214('#start').attr("cid");
+
+            if (confirm(" 是否开始当前容器 ?")) {
+                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=1&id=" + cid);
+            }
+        }
+        if (operation == "stop") {
+            var cid = jq214('#stop').attr("cid");
+
+            if (confirm(" 是否停止当前容器 ?")) {
+                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=2&id=" + cid);
+            }
+
+        }
+        if (operation == "remove") {
+            var cid = jq214('#remove').attr("cid");
+
+            if (confirm(" 是否删除当前容器 ?")) {
+                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=3&id=" + cid);
+            }
+
+        }
+        if (operation == "add") {
+            var cid = jq214('#remove').attr("cid");
+
+            if (confirm(" 是否增加一个新的容器 ?")) {
+                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=4");
+            }
+
+        }
+    }
 
 
 </script>
