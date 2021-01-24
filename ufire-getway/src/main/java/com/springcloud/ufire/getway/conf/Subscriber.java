@@ -4,6 +4,7 @@ import com.springcloud.ufire.core.constant.Constants;
 import com.springcloud.ufire.core.model.ResetUser;
 import com.springcloud.ufire.getway.service.ResetUserService;
 import com.springcloud.ufire.getway.utils.SpringUtil;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.ServiceInstance;
@@ -26,18 +27,20 @@ public class Subscriber extends JedisPubSub {
     private static final Logger log = LoggerFactory.getLogger(Subscriber.class);
     private ThreadPoolConfig threadPoolConfig;
 
+    @SneakyThrows
     @Override
     public void onMessage(String channel, String message) {
-        threadPoolConfig = (ThreadPoolConfig) SpringUtil.getBean("threadPoolConfig");
-        threadPoolConfig.buildThreadPool().execute(() ->
-                {
-                    try {
-                        upDateServers(channel, message);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-        );
+//        threadPoolConfig = (ThreadPoolConfig) SpringUtil.getBean("threadPoolConfig");
+//        threadPoolConfig.buildThreadPool().execute(() ->
+//                {
+//                    try {
+//                        upDateServers(channel, message);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//        );
+        upDateServers(channel, message);
     }
 
     public void upDateServers(String channel, String message) throws Exception {

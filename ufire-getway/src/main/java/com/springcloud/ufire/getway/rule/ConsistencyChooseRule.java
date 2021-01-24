@@ -32,7 +32,7 @@ public class ConsistencyChooseRule implements IChooseRule {
                 try {
                     List<PathContainer.Element> elements = exchange.getRequest().getPath().elements();
                     String userId = elements.get(elements.size() - 1).value();
-                    ServiceInstance server = hashRingConfig.getServer(userId);
+                    ServiceInstance server = hashRingConfig.getServer(userId,hashRingConfig.getHashRing().getServerMap());
                     return server;
                 } catch (Exception e) {
                     //do nothing
@@ -44,7 +44,7 @@ public class ConsistencyChooseRule implements IChooseRule {
                     List<PathContainer.Element> elements = exchange.getRequest().getPath().elements();
                     log.info("解析转发url:{}", exchange.getRequest().getURI());
                     String userId = elements.get(elements.size() - 3).value();
-                    return hashRingConfig.getServer(userId);
+                    return hashRingConfig.getServer(userId,hashRingConfig.getHashRing().getServerMap());
                 } catch (Exception e) {
                     //do nothing
                 }

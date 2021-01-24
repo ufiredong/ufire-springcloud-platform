@@ -48,6 +48,6 @@ public class RabbitResetUserSender {
         rabbitTemplate.setConfirmCallback(confirmCallback);
         //消息唯一ID
         CorrelationData correlationData = new CorrelationData(resetUser.getMessageId());
-        rabbitTemplate.convertAndSend("resetUser-exchange", "reset-key", resetUser, correlationData);
+        rabbitTemplate.convertAndSend("resetUser-exchange", resetUser.getRoutingKey(), resetUser, correlationData);
     }
 }
