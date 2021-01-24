@@ -193,10 +193,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>websocket-</title>
+    <title>websocket分布式集群模拟</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Test</title>
 </head>
+<div class="container"><a  type="button" onclick="display()" style="color:blue">显示/隐藏</a></div>
 <div id="div1" th:fragment="div1" class="container">
     <table class="pure-table" style="border-left-style: solid;border-left-width: 0px;margin-left: 100px; display: inline">
         <tr>
@@ -212,7 +213,7 @@
             </td>
         </tr>
         <tr>
-            <td><a type="button" onclick="add(1)" style="color:blue">新增一个websocket客户端</a>
+            <td><a type="button" onclick="add(1)" style="color:blue">新增websocket客户端</a>
             </td>
         </tr>
     </table>
@@ -279,7 +280,7 @@
             </div>
         </div>
     </div>
-    <p>Click <a id="restoreItemBtn">here</a> to restore</p>
+    <p><a id="restoreItemBtn"></a></p>
 </div>
 </body>
 <script id="s1" src="http://drag.js.org/blyde.min.js"></script>
@@ -374,6 +375,11 @@
         //此时的$是jQuery-2.1.4
         refresh()
     });
+
+    function display() {
+        var container = jq214('#div1');
+        container.toggle();
+    }
 
     function refresh(operation) {
         jq214('#div1').load("http://localhost:9876/websocket/containerList");

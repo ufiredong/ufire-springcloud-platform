@@ -2,8 +2,8 @@ package com.springcloud.ufire.getway.conf;
 
 import com.springcloud.ufire.core.constant.Constants;
 import com.springcloud.ufire.core.model.ResetUser;
-import com.springcloud.ufire.core.util.SpringUtil;
 import com.springcloud.ufire.getway.service.ResetUserService;
+import com.springcloud.ufire.getway.utils.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.ServiceInstance;

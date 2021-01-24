@@ -1,4 +1,4 @@
-package com.springcloud.ufire.core.util;
+package com.springcloud.ufire.getway.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

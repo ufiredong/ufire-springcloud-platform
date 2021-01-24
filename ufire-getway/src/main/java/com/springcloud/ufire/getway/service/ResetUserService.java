@@ -5,12 +5,17 @@ import com.springcloud.ufire.core.mapper.ResetUserMapper;
 import com.springcloud.ufire.core.model.MessageLog;
 import com.springcloud.ufire.core.model.ResetUser;
 import com.springcloud.ufire.core.util.FastJsonConvertUtil;
+import com.springcloud.ufire.getway.constant.RabbitConstants;
 import com.springcloud.ufire.getway.producer.RabbitResetUserSender;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,12 +44,16 @@ public class ResetUserService {
             // 设置消息状态为0 表示发送中
             messageLog.setStatus("0");
             // 设置消息未确认超时时间窗口为 一分钟
-            messageLog.setNextRetry(LocalDateTime.now());
+            Date date = DateUtils.addMinutes(new Date(), RabbitConstants.ORDER_TIMEOUT);
+            Instant instant = date.toInstant();
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
+            messageLog.setNextRetry(localDateTime);
             messageLog.setCreateTime(LocalDateTime.now());
             messageLog.setUpdateTime(LocalDateTime.now());
             messageLogMapper.insertSelective(messageLog);
             // 发送消息
-            rabbitResetUserSender.sendOrder(resetUser);
+            rabbitResetUserSender.sendOrder(resetUser,"reset."+resetUser.getReconnect());
         }
 
     }
