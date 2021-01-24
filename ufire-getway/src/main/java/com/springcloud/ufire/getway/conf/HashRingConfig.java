@@ -64,9 +64,9 @@ public class HashRingConfig {
     /**
      * 计算userId的hash值求得需要路由到的节点
      */
-    public ServiceInstance getServer(String userId) {
+    public ServiceInstance getServer(String userId,SortedMap<Integer, String> serverMap) {
         int userHash = getHash(userId);
-        SortedMap<Integer, String> serverMap = hashRing.getServerMap();
+//        SortedMap<Integer, String> serverMap = hashRing.getServerMap();
         // 遍历 有序Map serverHash从小到大  如果 serverHash  大于 userHash  则被视为第一个大于userHash的 hash值,
         // 第一个大于userHash 的 节点hash 就是需要路由到的节点如果是虚拟节点需解析获得真实节点。
         for (Integer serverHash : serverMap.keySet()) {
@@ -180,7 +180,10 @@ public class HashRingConfig {
                     ResetUser resetUser = new ResetUser();
                     resetUser.setMessageId(UUID.randomUUID().toString());
                     resetUser.setName("用户:" + userId);
-                    resetUser.setReconnect(getServer(userId).getUri().toString());
+                    resetUser.setResetLink(getServer(userId,hashRing.getServerMap()).getUri().toString());
+                    ServiceInstance orginal = getServer(userId, hashRing.getLastTimeServerMap());
+                    resetUser.setOriginalLink(orginal.getUri().toString());
+                    resetUser.setRoutingKey(orginal.getHost()+":"+orginal.getPort());
                     resetUsers.add(resetUser);
                 }
             }

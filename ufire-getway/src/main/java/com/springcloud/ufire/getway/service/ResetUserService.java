@@ -53,7 +53,7 @@ public class ResetUserService {
             messageLog.setUpdateTime(LocalDateTime.now());
             messageLogMapper.insertSelective(messageLog);
             // 发送消息
-            rabbitResetUserSender.sendOrder(resetUser,"reset."+resetUser.getReconnect());
+            rabbitResetUserSender.sendOrder(resetUser,resetUser.getRoutingKey());
         }
 
     }

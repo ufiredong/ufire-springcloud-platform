@@ -308,73 +308,213 @@ public class ResetUserExample extends AbstractExample<ResetUserExample, Criteria
             return (Criteria) this;
         }
 
-        public Criteria andReconnectIsNull() {
-            addCriterion("reconnect is null");
+        public Criteria andResetLinkIsNull() {
+            addCriterion("reset_link is null");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectIsNotNull() {
-            addCriterion("reconnect is not null");
+        public Criteria andResetLinkIsNotNull() {
+            addCriterion("reset_link is not null");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectEqualTo(String value) {
-            addCriterion("reconnect =", value, "reconnect");
+        public Criteria andResetLinkEqualTo(String value) {
+            addCriterion("reset_link =", value, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectNotEqualTo(String value) {
-            addCriterion("reconnect <>", value, "reconnect");
+        public Criteria andResetLinkNotEqualTo(String value) {
+            addCriterion("reset_link <>", value, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectGreaterThan(String value) {
-            addCriterion("reconnect >", value, "reconnect");
+        public Criteria andResetLinkGreaterThan(String value) {
+            addCriterion("reset_link >", value, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectGreaterThanOrEqualTo(String value) {
-            addCriterion("reconnect >=", value, "reconnect");
+        public Criteria andResetLinkGreaterThanOrEqualTo(String value) {
+            addCriterion("reset_link >=", value, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectLessThan(String value) {
-            addCriterion("reconnect <", value, "reconnect");
+        public Criteria andResetLinkLessThan(String value) {
+            addCriterion("reset_link <", value, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectLessThanOrEqualTo(String value) {
-            addCriterion("reconnect <=", value, "reconnect");
+        public Criteria andResetLinkLessThanOrEqualTo(String value) {
+            addCriterion("reset_link <=", value, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectLike(String pattern, String value) {
-            addCriterionPattern("reconnect like", pattern, value, "reconnect");
+        public Criteria andResetLinkLike(String pattern, String value) {
+            addCriterionPattern("reset_link like", pattern, value, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectNotLike(String pattern, String value) {
-            addCriterionPattern("reconnect not like", pattern, value, "reconnect");
+        public Criteria andResetLinkNotLike(String pattern, String value) {
+            addCriterionPattern("reset_link not like", pattern, value, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectIn(List<String> values) {
-            addCriterion("reconnect in", values, "reconnect");
+        public Criteria andResetLinkIn(List<String> values) {
+            addCriterion("reset_link in", values, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectNotIn(List<String> values) {
-            addCriterion("reconnect not in", values, "reconnect");
+        public Criteria andResetLinkNotIn(List<String> values) {
+            addCriterion("reset_link not in", values, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectBetween(String value1, String value2) {
-            addCriterion("reconnect between", value1, value2, "reconnect");
+        public Criteria andResetLinkBetween(String value1, String value2) {
+            addCriterion("reset_link between", value1, value2, "resetLink");
             return (Criteria) this;
         }
 
-        public Criteria andReconnectNotBetween(String value1, String value2) {
-            addCriterion("reconnect not between", value1, value2, "reconnect");
+        public Criteria andResetLinkNotBetween(String value1, String value2) {
+            addCriterion("reset_link not between", value1, value2, "resetLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkIsNull() {
+            addCriterion("original_link is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkIsNotNull() {
+            addCriterion("original_link is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkEqualTo(String value) {
+            addCriterion("original_link =", value, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkNotEqualTo(String value) {
+            addCriterion("original_link <>", value, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkGreaterThan(String value) {
+            addCriterion("original_link >", value, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkGreaterThanOrEqualTo(String value) {
+            addCriterion("original_link >=", value, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkLessThan(String value) {
+            addCriterion("original_link <", value, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkLessThanOrEqualTo(String value) {
+            addCriterion("original_link <=", value, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkLike(String pattern, String value) {
+            addCriterionPattern("original_link like", pattern, value, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkNotLike(String pattern, String value) {
+            addCriterionPattern("original_link not like", pattern, value, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkIn(List<String> values) {
+            addCriterion("original_link in", values, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkNotIn(List<String> values) {
+            addCriterion("original_link not in", values, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkBetween(String value1, String value2) {
+            addCriterion("original_link between", value1, value2, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalLinkNotBetween(String value1, String value2) {
+            addCriterion("original_link not between", value1, value2, "originalLink");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyIsNull() {
+            addCriterion("routing_key is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyIsNotNull() {
+            addCriterion("routing_key is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyEqualTo(String value) {
+            addCriterion("routing_key =", value, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyNotEqualTo(String value) {
+            addCriterion("routing_key <>", value, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyGreaterThan(String value) {
+            addCriterion("routing_key >", value, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyGreaterThanOrEqualTo(String value) {
+            addCriterion("routing_key >=", value, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyLessThan(String value) {
+            addCriterion("routing_key <", value, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyLessThanOrEqualTo(String value) {
+            addCriterion("routing_key <=", value, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyLike(String pattern, String value) {
+            addCriterionPattern("routing_key like", pattern, value, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyNotLike(String pattern, String value) {
+            addCriterionPattern("routing_key not like", pattern, value, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyIn(List<String> values) {
+            addCriterion("routing_key in", values, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyNotIn(List<String> values) {
+            addCriterion("routing_key not in", values, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyBetween(String value1, String value2) {
+            addCriterion("routing_key between", value1, value2, "routingKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingKeyNotBetween(String value1, String value2) {
+            addCriterion("routing_key not between", value1, value2, "routingKey");
             return (Criteria) this;
         }
     }
@@ -403,12 +543,14 @@ public class ResetUserExample extends AbstractExample<ResetUserExample, Criteria
     public enum C implements CInterface {
         //--------------------------------------------------
 		//[TABLE]
-		//--------------------------------------------------					
-						ID(1, Types.INTEGER, false, "id"),					
-						NAME(2, Types.VARCHAR, true, "name"),					
-						MESSAGE_ID(2, Types.VARCHAR, false, "message_id"),					
-						USER_ID(2, Types.VARCHAR, false, "user_id"),					
-						RECONNECT(2, Types.VARCHAR, false, "reconnect");
+		//--------------------------------------------------
+		/** id */					ID(1, Types.INTEGER, false, "id"),
+		/** 名称 */					NAME(2, Types.VARCHAR, true, "name"),
+		/** 消息id */				MESSAGE_ID(2, Types.VARCHAR, false, "message_id"),
+		/** 用户id */				USER_ID(2, Types.VARCHAR, false, "user_id"),
+		/** 目标地址 */				RESET_LINK(2, Types.VARCHAR, false, "reset_link"),
+		/** 原地址 */				ORIGINAL_LINK(2, Types.VARCHAR, false, "original_link"),
+		/** routing_key */			ROUTING_KEY(2, Types.VARCHAR, false, "routing_key");
 
         C(int types, int jdbcType, boolean delimited, String columnName) {
             init(new CItem(types, jdbcType, delimited, columnName, null , "`", "`"));
