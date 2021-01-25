@@ -15,7 +15,7 @@ public class JedisConfig {
          * 创建jedis 连接池
          * */
         @Bean
-        public JedisPool getJedisPool(){
-            return new JedisPool("8.136.110.11",6379);
+        public JedisPool getJedisPool(){ 
+            return new JedisPool("ufire-redis",6379);
         }
 }

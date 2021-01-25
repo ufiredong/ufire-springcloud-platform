@@ -110,16 +110,6 @@
             var parentListItem = window.parent.document.getElementById(userId)
             var port = event.data
             parentListItem.setAttribute("hostport", port.replace("『", "").replace("』", ""))
-            // if(port=="『192.168.43.189:2222』"){
-            //     serverPort.style.background="#00ffff"
-            // }else if(port=="『192.168.43.189:3333』"){
-            //     serverPort.style.background="#9bee79"
-            // }else if(port=="『192.168.43.189:4444』"){
-            //     serverPort.style.background="#b504e0"
-            // }else if(port=="『192.168.43.189:5555』"){
-            //     serverPort.style.background="#ff99cc"
-            // }
-
             serverPort.innerText = event.data;
         } else {
             setMessageInnerHTML(event.data);
