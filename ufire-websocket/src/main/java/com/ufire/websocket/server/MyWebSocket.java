@@ -63,7 +63,7 @@ public class MyWebSocket {
             int hash = HashRingUtil.getHash(userId);
             jedis.hset("user", String.valueOf(hash), userId);
             jedis.close();
-            sendMessage(session, SpringUtil.getBean(HostEntiyConfig.class).toString());
+            sendMessage(session, SpringUtil.getBean("myhost").toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

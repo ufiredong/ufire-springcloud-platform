@@ -1,5 +1,6 @@
 package com.ufire.websocket.conf;
 
+import com.ufire.websocket.util.SpringUtil;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -24,7 +25,8 @@ public class MqConfig {
     }
 
     @Bean
-    public Binding bindingExchangeQueue(DirectExchange exchange, Queue queue, @Autowired HostEntiyConfig hostEntiyConfig) {
-        return BindingBuilder.bind(queue).to(exchange).with(hostEntiyConfig + ":" + hostEntiyConfig.getPort());
+    public Binding bindingExchangeQueue(DirectExchange exchange, Queue queue) {
+        HostEntiyConfig myhost =(HostEntiyConfig) SpringUtil.getBean("myhost");
+        return BindingBuilder.bind(queue).to(exchange).with(myhost.getIp() + ":" + myhost.getPort());
     }
 }
