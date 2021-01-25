@@ -13,6 +13,7 @@
         <module>ufire-getway</module>
         <module>ufire-websocket</module>
         <module>websocket-ui</module>
+        <module>core</module>
     </modules>
 
     <properties>

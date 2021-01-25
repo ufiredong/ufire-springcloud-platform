@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: dev  #读取配置文件类型
+  rabbitmq:
+    addresses: 8.136.110.11:5672
+    username: guest
+    password: guest
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+    template:
+      mandatory: true
+  datasource:
+    url: jdbc:mysql://8.136.110.11:3306/rabbitmq?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+    driverClassName: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:com.springcloud.ufire.core.mapper/*.xml

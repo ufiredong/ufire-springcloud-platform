@@ -1,16 +1,23 @@
 package com.ufire.websocketui.controller;
 
-import org.springframework.http.HttpRequest;
+import com.github.dockerjava.api.command.InfoCmd;
+import com.github.dockerjava.api.command.ListContainersCmd;
+import com.github.dockerjava.api.command.ListServicesCmd;
+import com.github.dockerjava.api.model.Service;
+import com.ufire.websocketui.utils.DockerClientUtil;
+import com.ufire.websocketui.utils.LocalDateTimeUtils;
+import com.ufire.websocketui.vo.ContainerVo;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.model.Container;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.websocket.Session;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @program: ufire-springcloud-platform
@@ -21,31 +28,61 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Controller
 @RequestMapping(value = "/websocket")
 public class IndexController {
-    private static AtomicInteger userId = new AtomicInteger();
-    private static Map<HttpServletRequest, String> requestSessionPools = new HashMap<>();
+    @Autowired
+    private DockerClient dockerClient;
+    @Autowired
+    private DockerClientUtil dockerClientUtil;
 
     @GetMapping("/index")
     public String inedx() {
-//        userId = new AtomicInteger();
         return "index";
     }
 
     @GetMapping("/client")
 
     public String client(Model model, String userId) {
-        model.addAttribute("userId",userId);
+        model.addAttribute("userId", userId);
         return "client";
     }
 
-    public String setUserId() {
-
-
-        return "";
+    @GetMapping("/containerList")
+    public String list(@Autowired Model model, @RequestParam(required = false) String operat, @RequestParam(required = false) String id) {
+        if (Objects.nonNull(operat)) {
+            if (operat.equals("1")) {
+                dockerClientUtil.startContainer(dockerClient, id);
+            }
+            if (operat.equals("2")) {
+                dockerClientUtil.stopContainer(dockerClient, id);
+            }
+            if (operat.equals("3")) {
+                dockerClientUtil.removeContainer(dockerClient, id);
+            }
+            if (operat.equals("4")) {
+                dockerClientUtil.createContainers(dockerClient,"ufire-websocket-"+(int)((Math.random()*9+1)*100000),"ufire-websocket");
+            }
+        }
+        getList(model);
+        return "index::div1";
     }
 
-    public static void addUserId() {
-        userId.incrementAndGet();
+    private void getList(@Autowired Model model) {
+        List<ContainerVo> containerVoList = new ArrayList<>();
+        ListContainersCmd listContainersCmd = dockerClient.listContainersCmd();
+        listContainersCmd.withShowAll(true).getFilters().put("name", Arrays.asList("ufire-websocket"));
+        List<Container> containers = listContainersCmd.exec();
+        containers.stream().filter(container -> !container.getImage().equals("ufire-websocket-ui")).forEach(container -> {
+            ContainerVo containerVo = new ContainerVo();
+            String id = container.getId().substring(0, 6);
+            containerVo.setId(id);
+            containerVo.setStatus(container.getStatus());
+            containerVo.setIp(container.getNetworkSettings().getNetworks().get("ufire-springcloud-platform_default").getIpAddress());
+            containerVo.setPort("80");
+            containerVo.setName(Arrays.asList(container.getNames()).get(0));
+            containerVo.setCreatTime(LocalDateTimeUtils.toLocalDateTime(container.getCreated()));
+            containerVo.setStatus(container.getStatus());
+            containerVo.setState(container.getState());
+            containerVoList.add(containerVo);
+        });
+        model.addAttribute("containerVoList", containerVoList);
     }
-
-
 }

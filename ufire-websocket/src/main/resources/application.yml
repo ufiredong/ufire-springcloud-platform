@@ -6,12 +6,24 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ufire-nacos:8848
+        server-addr: 127.0.0.1:8848
   redis.maxTotal: 300
   redis.maxIdle: 8
   redis.minIdle: 1
   redis.testOnBorrow: true
   redis.testOnReturn: true
+  datasource:
+    url: jdbc:mysql://8.136.110.11:3306/rabbitmq?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+    driverClassName: com.mysql.jdbc.Driver
+  rabbitmq:
+    addresses: 8.136.110.11:5672
+    username: guest
+    password: guest
+    virtual-host: /
+mybatis:
+  mapper-locations: classpath：com.springcloud.ufire.core.mapper/*.xml
 
 #server:
 #  port: 8885

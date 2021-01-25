@@ -13,9 +13,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.6.0</version>
+            <groupId>org.ufire</groupId>
+            <artifactId>core</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -41,6 +45,21 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>mysql</groupId>-->
+            <!--<artifactId>mysql-connector-java</artifactId>-->
+        <!--</dependency>-->
+    <!--<dependency>-->
+        <!--<groupId>tk.mybatis</groupId>-->
+        <!--<artifactId>mapper-spring-boot-starter</artifactId>-->
+        <!--<version>1.1.0</version>-->
+    <!--</dependency>-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -48,7 +67,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.springcloud.ufire.UfireGetwayApplication</mainClass>
+                    <mainClass>com.springcloud.ufire.getway.UfireGetwayApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

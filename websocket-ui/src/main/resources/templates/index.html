@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:display="http://www.w3.org/1999/xhtml">
 <head>
     <style>
         * {
@@ -19,7 +19,6 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #ECECEC;
         }
 
         h1 {
@@ -44,12 +43,21 @@
 
         .contentFrame {
             position: relative;
-            padding: 40px 40px;
             width: 100%;
             max-width: 1800px;
             margin: 0 auto;
             background-color: #FFF;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.30);
+        }
+
+        .container {
+            font-size: 12px;
+            position: relative;
+            width: 1200px;
+            max-width: 1800px;
+            margin: 0 auto;
+            background-color: #FFF;
+            border: 1px solid #DEDEDE;
+            border-radius: 3px;
         }
 
         a {
@@ -138,48 +146,120 @@
             border-bottom: 0;
         }
 
-        .item {
-            cursor: move;
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        td, th {
+            padding: 0;
+        }
+
+        .pure-table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+        }
+
+        .pure-table caption {
+            color: #000;
+            font: italic 85%/1 arial, sans-serif;
+            padding: 1em 0;
             text-align: center;
-            background-color: #F8F8F8;
         }
 
-        .item.huge {
-            height: 200px;
-            width: 200px;
-            line-height: 198px;
+        .pure-table td, .pure-table th {
+            border-left: 1px solid #cbcbcb;
+            border-width: 0 0 0 1px;
+            font-size: inherit;
+            margin: 0;
+            overflow: visible;
+            padding: .5em 1em;
         }
 
-        .item.big {
-            height: 150px;
-            width: 150px;
-            line-height: 148px;
+        .pure-table thead {
+            background-color: #e0e0e0;
+            color: #000;
+            text-align: left;
+            vertical-align: bottom;
         }
 
-        .item.small {
-            height: 100px;
-            width: 100px;
-            line-height: 98px;
+        .pure-table td {
+            background-color: transparent;
         }
 
-        .item.tiny {
-            height: 50px;
-            width: 50px;
-            line-height: 48px;
-        }
     </style>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>websocket-</title>
+    <title>websocket分布式集群模拟</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Test</title>
 </head>
+<div class="container"><a  type="button" onclick="display()" style="color:blue">显示/隐藏</a></div>
+<div id="div1" th:fragment="div1" class="container">
+    <table class="pure-table" style="border-left-style: solid;border-left-width: 0px;margin-left: 100px; display: inline">
+        <tr>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td><a type="button" onclick="operat('add')" style="color:blue">新增websocket服务容器</a>
+            </td>
+        </tr>
+        <tr>
+            <td><a type="button" onclick="refresh()" style="color:blue">刷新容器列表</a>
+            </td>
+        </tr>
+        <tr>
+            <td><a type="button" onclick="add(1)" style="color:blue">新增websocket客户端</a>
+            </td>
+        </tr>
+    </table>
+    <table class="pure-table" style="border-left-style: solid;border-left-width: 0px; display: inline">
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>ip</th>
+            <th>端口</th>
+            <th>运行情况</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="containerVo:${containerVoList}">
 
-<button type="button" id="add" onclick="add(1)">add</button>
-<button type="button" id="group" onclick="group()">group</button>
-<input id="count" value=10>
+            <td th:text="${containerVo.id}"></td>
+            <td th:text="${containerVo.name}"></td>
+            <td th:text="${containerVo.ip}"></td>
+            <td th:text="${containerVo.port}"></td>
+            <td th:text="${containerVo.status}"></td>
+            <td th:text="${containerVo.state}"></td>
+            <td th:text="${containerVo.creatTime}"></td>
+            <!--//  <td><a th:href="${containerVo.operat}" onclick="operat()">start</a></td>-->
+            <td>
+                <a th:operat="${containerVo.operat}" id="stop"
+                   th:cid="${containerVo.id}"
+                   th:if="${containerVo.state eq 'running'}" onclick="operat('stop')"
+                   style="font-size: 8px;width:40px; height:18px;text-decoration:underline; color:blue" ;>stop
+                </a>
+                <a class="operat" th:operat="${containerVo.operat}" id="start" th:cid="${containerVo.id}"
+                   th:if="${containerVo.state eq 'exited'} or ${containerVo.state eq 'created'}"
+                   onclick="operat('start')"
+                   style="font-size: 8px;width:40px; height:18px;text-decoration:underline; color:blue" ;>start
+                </a>&nbsp;&nbsp;&nbsp;
+                <a class="operat" th:operat="${containerVo.operat}" id="remove" th:cid="${containerVo.id}"
+                   th:if="${containerVo.state eq 'exited'}" onclick="operat('remove')"
+                   style="font-size: 8px;width:60px; height:18px;text-decoration:underline; color:blue" ;>remove
+                </a>
+            </td>
+
+
+            <!--                <button  class="operat" th:operat= "${containerVo.operat}"  th:cid= "${containerVo.id}" style="font-size: 8px;width:40px; height:18px";  th:if="${containerVo.state eq running }"></button></td>-->
+        </tr>
+    </table>
+</div>
 <div class="mainFrame">
     <div class="contentFrame">
         <div>
@@ -200,13 +280,16 @@
             </div>
         </div>
     </div>
-    <p>Click <a id="restoreItemBtn">here</a> to restore</p>
+    <p><a id="restoreItemBtn"></a></p>
 </div>
 </body>
 <script id="s1" src="http://drag.js.org/blyde.min.js"></script>
 <script id="s2" src="http://drag.js.org/dist/drag.min.js"></script>
 <script id="s3" src="http://drag.js.org/demo.min.js"></script>
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script> var jq214 = jQuery.noConflict(true); </script>
 <script>
+
 
     var userIdCount = 0;
 
@@ -221,7 +304,7 @@
             listItem.id = "user" + userIdCount
             listItem.setAttribute("hostport", "");
             var client = document.createElement("iframe");
-            client.src = "http://websocket.ufiredong.cn/ufire-websocket-ui/websocket/client?userId=user" + userIdCount;
+            client.src = "http://localhost:9888/ufire-websocket-ui/websocket/client?userId=user" + userIdCount;
             client.frameBorder = "no";
             client.border = "0";
             client.marginheight = 0;
@@ -274,6 +357,71 @@
             }
         }
     }
+
+    function start(id) {
+        console.info("id");
+        if (confirm("stop?")) {
+
+            jq214('#div1').load("http://localhost:9876/websocket/containerList");
+        }
+
+    }
+
+
+</script>
+<script>
+
+    jq214(function ($) {
+        //此时的$是jQuery-2.1.4
+        refresh()
+    });
+
+    function display() {
+        var container = jq214('#div1');
+        container.toggle();
+    }
+
+    function refresh(operation) {
+        jq214('#div1').load("http://localhost:9876/websocket/containerList");
+    }
+
+    function operat(operation) {
+
+        if (operation == "start") {
+
+
+            var cid = jq214('#start').attr("cid");
+
+            if (confirm(" 是否开始当前容器 ?")) {
+                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=1&id=" + cid);
+            }
+        }
+        if (operation == "stop") {
+            var cid = jq214('#stop').attr("cid");
+
+            if (confirm(" 是否停止当前容器 ?")) {
+                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=2&id=" + cid);
+            }
+
+        }
+        if (operation == "remove") {
+            var cid = jq214('#remove').attr("cid");
+
+            if (confirm(" 是否删除当前容器 ?")) {
+                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=3&id=" + cid);
+            }
+
+        }
+        if (operation == "add") {
+            var cid = jq214('#remove').attr("cid");
+
+            if (confirm(" 是否增加一个新的容器 ?")) {
+                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=4");
+            }
+
+        }
+    }
+
 
 </script>
 </html>
