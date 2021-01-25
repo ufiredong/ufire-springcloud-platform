@@ -24,9 +24,6 @@ public class HostEntiyConfig {
     private String ip;
     @Value("${server.port}")
     private String port;
-    @Autowired
-    private DiscoveryClient discoveryClient;
-
     @Bean(value = "myhost")
     public HostEntiyConfig getHostEntiyConfig() throws UnknownHostException {
         HostEntiyConfig hostEntiyConfig = new HostEntiyConfig();

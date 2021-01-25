@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MessageService {
-    @RabbitListener(queues= MqConfig.QUEUE)
+    @RabbitListener(queues= MqConfig.QUEUE_NAME)
     public void receiveMessage(Object object) {	// 进行消息接收处理
         System.err.println("【*** 接收消息 ***】" + object);
     }

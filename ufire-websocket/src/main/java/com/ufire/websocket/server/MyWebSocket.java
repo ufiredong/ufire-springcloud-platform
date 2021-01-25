@@ -1,4 +1,5 @@
 package com.ufire.websocket.server;
+import com.ufire.websocket.conf.HostEntiyConfig;
 import com.ufire.websocket.util.HashRingUtil;
 import com.ufire.websocket.util.SpringUtil;
 import org.springframework.stereotype.Component;
@@ -62,7 +63,7 @@ public class MyWebSocket {
             int hash = HashRingUtil.getHash(userId);
             jedis.hset("user", String.valueOf(hash), userId);
             jedis.close();
-            sendMessage(session, SpringUtil.getBean("myhost").toString());
+            sendMessage(session, SpringUtil.getBean(HostEntiyConfig.class).toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
