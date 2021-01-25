@@ -304,7 +304,7 @@
             listItem.id = "user" + userIdCount
             listItem.setAttribute("hostport", "");
             var client = document.createElement("iframe");
-            client.src = "http://localhost:9888/ufire-websocket-ui/websocket/client?userId=user" + userIdCount;
+            client.src = "http://websocket.ufiredong.cn/ufire-websocket-ui/websocket/client?userId=user" + userIdCount;
             client.frameBorder = "no";
             client.border = "0";
             client.marginheight = 0;
@@ -362,7 +362,7 @@
         console.info("id");
         if (confirm("stop?")) {
 
-            jq214('#div1').load("http://localhost:9876/websocket/containerList");
+            jq214('#div1').load("http://websocket.ufiredong.cn/ufire-websocket-ui/websocket/containerList");
         }
 
     }
@@ -382,7 +382,7 @@
     }
 
     function refresh(operation) {
-        jq214('#div1').load("http://localhost:9876/websocket/containerList");
+        jq214('#div1').load("http://websocket.ufiredong.cn/websocket/containerList");
     }
 
     function operat(operation) {
@@ -393,14 +393,14 @@
             var cid = jq214('#start').attr("cid");
 
             if (confirm(" 是否开始当前容器 ?")) {
-                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=1&id=" + cid);
+                jq214('#div1').load("http://websocket.ufiredong.cn/websocket/containerList?operat=1&id=" + cid);
             }
         }
         if (operation == "stop") {
             var cid = jq214('#stop').attr("cid");
 
             if (confirm(" 是否停止当前容器 ?")) {
-                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=2&id=" + cid);
+                jq214('#div1').load("http://websocket.ufiredong.cn/websocket/containerList?operat=2&id=" + cid);
             }
 
         }
@@ -416,7 +416,7 @@
             var cid = jq214('#remove').attr("cid");
 
             if (confirm(" 是否增加一个新的容器 ?")) {
-                jq214('#div1').load("http://localhost:9876/websocket/containerList?operat=4");
+                jq214('#div1').load("http://websocket.ufiredong.cn/websocket/containerList?operat=4");
             }
 
         }
