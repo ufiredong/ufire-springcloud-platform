@@ -18,7 +18,7 @@ spring:
     password: 123456
     driverClassName: com.mysql.jdbc.Driver
   rabbitmq:
-    addresses: 8.136.110.11:5672
+    addresses: 172.18.0.5:5672
     username: guest
     password: guest
     virtual-host: /

@@ -40,7 +40,7 @@
     //  document.getElementById("userId").innerText=userId;
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
-        websocket = new WebSocket("ws://localhost:9888/ufire-websocket/socket/" + userId);
+        websocket = new WebSocket("ws://websocket.ufiredong.cn/ufire-websocket/socket/" + userId);
     } else {
         alert('Not support websocket')
     }
@@ -185,7 +185,7 @@
         var message = document.getElementById('text').value.toString();
         var toUser = message.substring(1, getIndex(message))
         var message = message.substring(getIndex(message) + 1, message.toString().length)
-        xmlhttp.open("GET", "http://localhost:9888/ufire-websocket/websocket/to/" + toUser + "/" + message, true);
+        xmlhttp.open("GET", "http://websocket.ufiredong.cn/ufire-websocket/websocket/to/" + toUser + "/" + message, true);
         xmlhttp.send();
     }
 
