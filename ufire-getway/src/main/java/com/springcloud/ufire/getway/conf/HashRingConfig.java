@@ -178,6 +178,7 @@ public class HashRingConfig {
                 if (value.indexOf(server) != -1) {
                     log.info("用户{}需要重新进行链接到", userId);
                     ResetUser resetUser = new ResetUser();
+                    resetUser.setUserId(userId);
                     resetUser.setMessageId(UUID.randomUUID().toString());
                     resetUser.setName("用户:" + userId);
                     resetUser.setResetLink(getServer(userId,hashRing.getServerMap()).getUri().toString());

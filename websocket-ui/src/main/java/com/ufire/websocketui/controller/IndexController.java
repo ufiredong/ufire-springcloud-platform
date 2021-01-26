@@ -32,16 +32,15 @@ public class IndexController {
     private DockerClient dockerClient;
     @Autowired
     private DockerClientUtil dockerClientUtil;
-
     @GetMapping("/index")
     public String inedx() {
         return "index";
     }
-
+    public static final  String WSS_URL="ws://localhost:9888/ufire-websocket/socket/";
     @GetMapping("/client")
-
     public String client(Model model, String userId) {
         model.addAttribute("userId", userId);
+        model.addAttribute("wssUrl",WSS_URL);
         return "client";
     }
 

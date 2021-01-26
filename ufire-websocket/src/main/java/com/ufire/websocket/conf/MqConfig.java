@@ -27,6 +27,6 @@ public class MqConfig {
     @Bean
     public Binding bindingExchangeQueue(DirectExchange exchange, Queue queue) {
         HostEntiyConfig myhost =(HostEntiyConfig) SpringUtil.getBean("myhost");
-        return BindingBuilder.bind(queue).to(exchange).with(myhost.getIp() + ":" + myhost.getPort());
+        return BindingBuilder.bind(queue).to(exchange).with("192.168.86.137" + ":" + myhost.getPort());
     }
 }
