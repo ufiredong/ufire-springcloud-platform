@@ -10,7 +10,7 @@
 <body>
 <span id="serverPort" style="font-size: 8px;height: 18px;line-height: 1;"></span><span id="userId"
                                                                                        style="font-size: 8px;height: 18px;line-height: 1;"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-        id="state" style=" background: rgb(238, 255, 255);color:green;font-size: 8px;height: 18px;line-height: 1;"></span><br/>
+        id="state" style=" background: rgb(238, 255, 255);font-size: 8px;height: 18px;line-height: 1;"></span><br/>
 <input style="font-size: 8px;width:100px; height:12px" ; id="text" type="text"/>&nbsp;&nbsp;&nbsp;<button
         style="font-size: 8px;width:40px; height:18px" onclick="send()">send
 </button>&nbsp;&nbsp;&nbsp;<button id="status" style="font-size: 8px;width:40px; height:18px"
@@ -51,6 +51,8 @@
         //连接成功建立的回调方法
         wss.onopen = function (event) {
 
+        }
+        wss.onclose = function () {
         }
 
         //接收到消息的回调方法
@@ -121,27 +123,42 @@
         document.getElementById('message').innerHTML = innerHTML;
     }
 
-    // 手动 up 连接方法
-    function up() {
-
+    function upOrDownWebSocket() {
+        debugger
+        var status = document.getElementById("status").innerText;
+        if (status == "down") {
+            down()
+        }
+        if (status == "up") {
+            up()
+        }
     }
 
-    // 手动 up 关闭连接方法
-    function down() {
 
+    // 手动 up 连接方法
+    function up() {
+        connect()
+        setStats()
+    }
+
+    // 手动 down 关闭连接方法
+    function down() {
+        wss.close();
+        setStats()
     }
 
     // 设置按钮状态
     function setStats() {
         if (wss.readyState == 1) {
             document.getElementById('status').innerText = "down"
-            document.getElementById('state').innerText="online"
-            document.getElementById('state')
+            document.getElementById('state').innerText = "online"
+            document.getElementById('state').style.color = "green"
 
         }
         if (wss.readyState == 3) {
             document.getElementById('status').innerText = "up"
-            document.getElementById('state').innerText="offline"
+            document.getElementById('state').innerText = "offline"
+            document.getElementById('state').style.color = "red"
         }
     }
 
