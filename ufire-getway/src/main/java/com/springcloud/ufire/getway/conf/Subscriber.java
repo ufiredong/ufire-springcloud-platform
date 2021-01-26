@@ -33,9 +33,7 @@ public class Subscriber extends JedisPubSub {
         threadPoolConfig = (ThreadPoolConfig) SpringUtil.getBean("threadPoolConfig");
         threadPoolConfig.buildThreadPool().execute(() ->
                 {
-
                     upDateServers(channel, message);
-
                 }
         );
     }

@@ -34,7 +34,7 @@ public class HostEntiyConfig {
 
     @Override
     public String toString(){
-        return "『192.168.86.137:"+this.getPort() +"』";
+        return "『192.168.43.189:"+this.getPort() +"』";
     }
 
 }

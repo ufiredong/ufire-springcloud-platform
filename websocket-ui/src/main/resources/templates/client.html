@@ -16,7 +16,7 @@
 </button>&nbsp;&nbsp;&nbsp;<button id="status" style="font-size: 8px;width:40px; height:18px"
                                    onclick="upOrDownWebSocket()"></button>
 <div id="loop">
-    <marquee loop=2 class="loop"><font size=+3 color=red id="message"
+    <marquee loop=2 class="loop"><font size=+3 id="message"
                                        style="font-size: 8px;height: 18px;line-height: 1;"></font></marquee>
 </div>
 <p style="display: none">
@@ -29,9 +29,10 @@
 <script>
     var wss = null;
     var userId = null;
+    var lockReconnect = false; //避免重复连接
     $(function () {
         userId = $('#userIdd').val();
-        $('#userId').innerHTML = userId;
+        document.getElementById('userId').innerText = userId
         connect() // 初始化连接wss
     });
 
@@ -43,51 +44,42 @@
             alert('Not support websocket')
         }
 
+        wss.onclose = function () {
+            setMessageInnerHTML("已关闭");
+            setStatus()
+            reconnect()
+        }
+
         //连接发生错误的回调方法
         wss.onerror = function () {
-            setMessageInnerHTML("error");
+            setMessageInnerHTML("发送错误");
         };
 
         //连接成功建立的回调方法
         wss.onopen = function (event) {
 
         }
-        wss.onclose = function () {
-        }
+
 
         //接收到消息的回调方法
         wss.onmessage = function (event) {
 
             var message = $.parseJSON(event.data);
             if (message.type == 1) {
+                console.info("-------------------------成功建立连接")
                 document.getElementById('serverPort').innerText = message.ip
-                setStats()
+                setStatus()
+                setMessageInnerHTML(message.content);
             }
             if (message.type == 2) {
-                console.info("-------------------------通知关闭")
+                console.info("-------------------------服务通知关闭")
+                wss.close();
             }
             if (message.type == 3) {
                 console.info("-------------------------通信")
+                setMessageInnerHTML(message.content);
             }
-            // // 服务端告知客户端主动断掉wss连接
-            // if (event.data == "close") {
-            //     websocket.close();
-            // }
-            // // IP赋值
-            // if (event.data.indexOf("『") != -1) {
-            //     var serverPort = document.getElementById("serverPort");
-            //     var userId = document.getElementById("userId").innerHTML;
-            //     var parentListItem = window.parent.document.getElementById(userId)
-            //     var port = event.data
-            //     parentListItem.setAttribute("hostport", port.replace("『", "").replace("』", ""))
-            //     serverPort.innerText = event.data;
-            // } else {
-            //     setMessageInnerHTML(event.data);
-            // }
-
         }
-
-
     }
 
     //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
@@ -100,15 +92,17 @@
         var message = document.getElementById('text').value.toString();
         var toUser = message.substring(1, getIndex(message))
         var message = message.substring(getIndex(message) + 1, message.toString().length)
-        xmlhttp.open("GET", "http://localhost:9888/ufire-websocket/websocket/to/" + toUser + "/" + message, true);
-        xmlhttp.send();
+        $.ajax({url: "http://localhost:9888/ufire-websocket/websocket/to/" + toUser + "/" + message, async: false});
     }
 
-    //主动断掉close连接后进行重新连接
+    //主动断掉close连接后进行重新连接 5s后重新连接
     function reconnect() {
-
+        if (lockReconnect) return;
+        lockReconnect = true;
+        //没连接上会一直重连，设置延迟避免请求过多
+        setMessageInnerHTML("将在5s后重新连接");
         setTimeout(function () {
-            websocket = new WebSocket("ws://localhost:9888/ufire-websocket/socket/" + userId);
+            connect();
             lockReconnect = false;
         }, 5000);
     }
@@ -124,7 +118,6 @@
     }
 
     function upOrDownWebSocket() {
-        debugger
         var status = document.getElementById("status").innerText;
         if (status == "down") {
             down()
@@ -138,27 +131,27 @@
     // 手动 up 连接方法
     function up() {
         connect()
-        setStats()
     }
 
     // 手动 down 关闭连接方法
     function down() {
         wss.close();
-        setStats()
     }
 
     // 设置按钮状态
-    function setStats() {
+    function setStatus() {
         if (wss.readyState == 1) {
             document.getElementById('status').innerText = "down"
             document.getElementById('state').innerText = "online"
             document.getElementById('state').style.color = "green"
+            document.getElementById('message').style.color = "green"
 
         }
         if (wss.readyState == 3) {
             document.getElementById('status').innerText = "up"
             document.getElementById('state').innerText = "offline"
             document.getElementById('state').style.color = "red"
+            document.getElementById('message').style.color = "red"
         }
     }
 

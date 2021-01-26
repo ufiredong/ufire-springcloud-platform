@@ -72,6 +72,7 @@ public class MyWebSocket {
             messageVo.setDateTime(LocalDateTimeUtils.format(LocalDateTime.now()));
             messageVo.setIp(myhost.toString());
             messageVo.setType(1);
+            messageVo.setContent("已连接");
             sendMessage(session, JSON.toJSONString(messageVo));
         } catch (Exception e) {
             log.error("{}连接发生异常{}", userId, e.getMessage());
@@ -81,7 +82,7 @@ public class MyWebSocket {
     }
 
     /**
-     * 关闭连接时调用
+     * TCP长链接close事件时触发
      *
      * @param userId 关闭连接的客户端的userId
      */

@@ -1,12 +1,16 @@
 package com.ufire.websocket.controller;
 
+import com.ufire.websocket.server.MessageVo;
 import com.ufire.websocket.server.MyWebSocket;
+import com.ufire.websocket.util.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 /**
  * @program: ufire-springcloud-platform
@@ -37,6 +41,7 @@ public class HttpMessageController {
     }
     @RequestMapping(value = "close")
     public void   close(@RequestParam("userId") String userId){
+
         myWebSocket.onClose(userId);
     }
 

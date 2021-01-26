@@ -220,13 +220,13 @@
     <table class="pure-table" style="border-left-style: solid;border-left-width: 0px; display: inline">
         <tr>
             <th>ID</th>
-            <th>名称</th>
+            <th>name</th>
             <th>ip</th>
-            <th>端口</th>
-            <th>运行情况</th>
-            <th>状态</th>
-            <th>创建时间</th>
-            <th>操作</th>
+            <th>prot</th>
+            <th>status</th>
+            <th>state</th>
+            <th>createTime</th>
+            <th>operat</th>
         </tr>
         <tr th:each="containerVo:${containerVoList}">
 
@@ -254,8 +254,6 @@
                    style="font-size: 8px;width:60px; height:18px;text-decoration:underline; color:blue" ;>remove
                 </a>
             </td>
-
-
             <!--                <button  class="operat" th:operat= "${containerVo.operat}"  th:cid= "${containerVo.id}" style="font-size: 8px;width:40px; height:18px";  th:if="${containerVo.state eq running }"></button></td>-->
         </tr>
     </table>
@@ -314,13 +312,6 @@
         }
         reloadAbleJSFn("s3", "http://drag.js.org/demo.min.js")
     }
-
-    // var client = document.getElementsByClassName("listItem")
-    // var Observer = new MutationObserver(function (mutations, instance) {
-    //     console.info("client发生变动了")
-    // });
-    // Observer.observe(client, {
-    // });
 
     function reloadAbleJSFn(id, newJS) {
         var oldjs = null;
