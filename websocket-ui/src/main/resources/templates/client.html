@@ -66,12 +66,12 @@
 
             var message = $.parseJSON(event.data);
             if (message.type == 1) {
-                if (typeof (window.parent.colorMap.get(message.ip)) == "undefined") {
-                    window.parent.colorMap.set(message.ip, window.parent.colors[window.parent.colorMap.size])
-                }
+                // if (typeof (window.parent.colorMap.get(message.ip)) == "undefined") {
+                //     window.parent.colorMap.set(message.ip, window.parent.colors[window.parent.colorMap.size])
+                // }
                 console.info("-------------------------成功建立连接")
                 document.getElementById('serverPort').innerText = message.ip
-                document.getElementById('serverPort').style.color = window.parent.colorMap.get(message.ip);
+                //document.getElementById('serverPort').style.color = window.parent.colorMap.get(message.ip);
                 setStatus()
                 setMessageInnerHTML(message.content);
             }

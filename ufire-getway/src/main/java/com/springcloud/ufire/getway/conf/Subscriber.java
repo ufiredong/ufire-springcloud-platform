@@ -62,12 +62,10 @@ public class Subscriber extends JedisPubSub {
                 resetUserService.resetUserSend(resetUserList);
             }
         } catch (Exception e) {
-            log.error("--upDateServers发生异常", e.getMessage());
+            log.error("--upDateServers发生异常{}", e.getMessage());
         } finally {
             jedis.close();
         }
-
-
     }
 
     @Override

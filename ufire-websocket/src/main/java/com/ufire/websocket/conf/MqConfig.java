@@ -12,11 +12,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MqConfig {
     public static final String EXCHANGE = "resetUser-exchange"; // 交换空间名称
-    public static final String QUEUE_NAME = "resetUser-queue"; // 队列名称
-
     @Bean
-    public Queue queue() { // 要穿件的队列信息
-        return new Queue(QUEUE_NAME);
+    public Queue queue() { //
+        HostEntiyConfig myhost =(HostEntiyConfig) SpringUtil.getBean("myhost");
+        return new Queue("rresetUser.queue".concat("192.168.86.137" + ":" + myhost.getPort()));
     }
 
     @Bean
@@ -27,6 +26,6 @@ public class MqConfig {
     @Bean
     public Binding bindingExchangeQueue(DirectExchange exchange, Queue queue) {
         HostEntiyConfig myhost =(HostEntiyConfig) SpringUtil.getBean("myhost");
-        return BindingBuilder.bind(queue).to(exchange).with("192.168.43.189" + ":" + myhost.getPort());
+        return BindingBuilder.bind(queue).to(exchange).with("192.168.86.137" + ":" + myhost.getPort());
     }
 }

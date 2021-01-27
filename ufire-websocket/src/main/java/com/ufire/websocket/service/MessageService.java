@@ -24,12 +24,13 @@ public class MessageService {
     @Autowired
     private MyWebSocket myWebSocket;
 
-    @RabbitListener(queues = MqConfig.QUEUE_NAME)
-    public void receiveMessage(ResetUser resetUser) {    // 通知 客户端 关闭 链接后重新 连接
-        MessageVo messageVo = new MessageVo();
-        messageVo.setDateTime(LocalDateTimeUtils.format(LocalDateTime.now()));
-        messageVo.setType(2);
-        messageVo.setContent("close");
-        myWebSocket.sendInfo(resetUser.getUserId(), JSON.toJSONString(messageVo));
+    @RabbitListener(queues = "")
+    public void receiveMessage(Object object) {    // 通知 客户端 关闭 链接后重新 连接
+        log.info("shoudao-----------------------------------------{}",object);
+//        MessageVo messageVo = new MessageVo();
+//        messageVo.setDateTime(LocalDateTimeUtils.format(LocalDateTime.now()));
+//        messageVo.setType(2);
+//        messageVo.setContent("close");
+//        myWebSocket.sendInfo(resetUser.getUserId(), JSON.toJSONString(messageVo));
     }
 }
