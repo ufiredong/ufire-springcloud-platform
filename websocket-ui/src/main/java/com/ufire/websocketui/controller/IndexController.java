@@ -1,10 +1,5 @@
 package com.ufire.websocketui.controller;
-
-import com.github.dockerjava.api.command.InfoCmd;
 import com.github.dockerjava.api.command.ListContainersCmd;
-import com.github.dockerjava.api.command.ListServicesCmd;
-import com.github.dockerjava.api.model.Service;
-import com.ufire.websocketui.api.WebSocketApi;
 import com.ufire.websocketui.utils.DockerClientUtil;
 import com.ufire.websocketui.utils.LocalDateTimeUtils;
 import com.ufire.websocketui.vo.ContainerVo;
@@ -17,9 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @program: ufire-springcloud-platform
@@ -38,8 +31,8 @@ public class IndexController {
     private String wssUrl;
     @Value("${app.messageUrl}")
     private String messageUrl;
-    @Autowired
-    private WebSocketApi webSocketApi;
+//    @Autowired
+//    private WebSocketApi webSocketApi;
 
     @GetMapping("/index")
     public String inedx() {
