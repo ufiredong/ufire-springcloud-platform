@@ -3,134 +3,115 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
 <head>
-
-
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>websocket客户端</title>
 </head>
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
 <body>
 <span id="serverPort" style="font-size: 8px;height: 18px;line-height: 1;"></span><span id="userId"
                                                                                        style="font-size: 8px;height: 18px;line-height: 1;"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-        id="state" style=" background: rgb(238, 255, 255);color:green;font-size: 8px;height: 18px;line-height: 1;">online</span><br/>
+        id="state" style=" background: rgb(238, 255, 255);font-size: 8px;height: 18px;line-height: 1;"></span><br/>
 <input style="font-size: 8px;width:100px; height:12px" ; id="text" type="text"/>&nbsp;&nbsp;&nbsp;<button
         style="font-size: 8px;width:40px; height:18px" onclick="send()">send
 </button>&nbsp;&nbsp;&nbsp;<button id="status" style="font-size: 8px;width:40px; height:18px"
                                    onclick="upOrDownWebSocket()"></button>
 <div id="loop">
-    <marquee loop=2 class="loop"><font size=+3 color=red id="message"
+    <marquee loop=2 class="loop"><font size=+3 id="message"
                                        style="font-size: 8px;height: 18px;line-height: 1;"></font></marquee>
 </div>
-<p id="userIdd" style="display: none">
-    <strong th:text="${userId}"></strong>
+<p style="display: none">
+    <input id="userIdd" th:value="${userId}"/>
+    <input id="wssUrl" th:value="${wssUrl}"/>
+    <input id="messageUrl" th:value="${messageUrl}"/>
 </p>
 </body>
 <script type="text/javascript">
-    var xmlhttp;
-    if (window.XMLHttpRequest) {
-        //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
-        xmlhttp = new XMLHttpRequest();
-    } else {
-        // IE6, IE5 浏览器执行代码
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    var websocket = null;
-    var userId = document.getElementById("userIdd").innerText.replace(/(^\s*)|(\s*$)/g, "");
-    console.info(userId.length)
-    document.getElementById("userId").innerHTML = userId;
-    //  document.getElementById("userId").innerText=userId;
-    //判断当前浏览器是否支持WebSocket
-    if ('WebSocket' in window) {
-        websocket = new WebSocket("ws://websocket.ufiredong.cn/ufire-websocket/socket/" + userId);
-    } else {
-        alert('Not support websocket')
-    }
+</script>
+<script>
+    var wss = null;
+    var userId = null;
+    var lockReconnect = false; //避免重复连接
+    $(function () {
+        debugger
+        userId = $('#userIdd').val();
+        document.getElementById('userId').innerText = userId
+        connect() // 初始化连接wss
+    });
 
-    //连接发生错误的回调方法
-    websocket.onerror = function () {
-        setMessageInnerHTML("error");
-        if (websocket.readyState == 3) {
-            var state = document.getElementById("state");
-            var status = document.getElementById("status")
-            status.innerText = "up"
-            state.innerText = "offline"
-            state.style.color = "red"
-        }
-    };
-
-    //
-    // //心跳检测
-    // var heartCheck = {
-    //     timeout: 1000,//10秒
-    //     timeoutObj: null,
-    //     reset: function () {
-    //         clearTimeout(this.timeoutObj);
-    //         return this;
-    //     },
-    //     start: function () {
-    //         this.timeoutObj = setTimeout(function () {
-    //             //这里发送一个心跳，后端收到后，返回一个心跳消息，
-    //             //onmessage拿到返回的心跳就说明连接正常
-    //             //websocket.send("HeartBeat");
-    //             xmlhttp.open("GET", "http://localhost:9888/ufire-websocket/websocket/to/" + userId + "/" + "heartCheck", true);
-    //             xmlhttp.send();
-    //
-    //             xmlhttp.onreadystatechange = function () {
-    //                // // sleep(10000); //休眠10秒
-    //                //  console.info(xmlhttp.status)
-    //
-    //                 var result = xmlhttp.responseText
-    //                 console.info(result);
-    //                 if (result == "ok") {
-    //                     console.info("连接正常")
-    //                     heartCheck.reset().start()
-    //                 } else {
-    //                     websocket.close();
-    //                 }
-    //
-    //             }
-    //         }, this.timeout)
-    //     }
-    // }
-
-
-    //连接成功建立的回调方法
-    websocket.onopen = function (event) {
-        var status = document.getElementById("status");
-        var state = document.getElementById("state");
-        state.style.color = "blue"
-        status.innerText = "down"
-       // heartCheck.reset().start();
-    }
-
-    //接收到消息的回调方法
-    websocket.onmessage = function (event) {
-        if (event.data.indexOf("『") != -1) {
-            var serverPort = document.getElementById("serverPort");
-            var userId = document.getElementById("userId").innerHTML;
-            var parentListItem = window.parent.document.getElementById(userId)
-            var port = event.data
-            parentListItem.setAttribute("hostport", port.replace("『", "").replace("』", ""))
-            serverPort.innerText = event.data;
+    function connect() {
+        //判断当前浏览器是否支持WebSocket
+        if ('WebSocket' in window) {
+            wss = new WebSocket($('#wssUrl').val() + userId);
         } else {
-            setMessageInnerHTML(event.data);
+            alert('Not support websocket')
         }
-    }
 
-    //连接关闭的回调方法
-    websocket.onclose = function () {
-        setMessageInnerHTML("close");
-        if (websocket.readyState == 3) {
-            var state = document.getElementById("state");
-            var status = document.getElementById("status")
-            status.innerText = "up"
-            state.innerText = "offline"
-            state.style.color = "red"
+        wss.onclose = function () {
+            setMessageInnerHTML("已关闭");
+            setStatus()
+            reconnect()
+        }
+
+        //连接发生错误的回调方法
+        wss.onerror = function () {
+            setMessageInnerHTML("发送错误");
+        };
+
+        //连接成功建立的回调方法
+        wss.onopen = function (event) {
+
+        }
+
+
+        //接收到消息的回调方法
+        wss.onmessage = function (event) {
+            var message = $.parseJSON(event.data);
+            if (message.type == 1) {
+                // if (typeof (window.parent.colorMap.get(message.ip)) == "undefined") {
+                //     window.parent.colorMap.set(message.ip, window.parent.colors[window.parent.colorMap.size])
+                // }
+                console.info("-------------------------成功建立连接")
+                document.getElementById('serverPort').innerText = message.ip
+                //document.getElementById('serverPort').style.color = window.parent.colorMap.get(message.ip);
+                setStatus()
+                setMessageInnerHTML(message.content);
+            }
+            if (message.type == 2) {
+                console.info("-------------------------服务通知关闭")
+                wss.close();
+            }
+            if (message.type == 3) {
+                console.info("-------------------------通信")
+                setMessageInnerHTML(message.content);
+            }
         }
     }
 
     //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
     window.onbeforeunload = function () {
-        websocket.close();
+        wss.close();
+    }
+
+    // 发送消息 统一从网关进行转发
+    function send() {
+        debugger
+        var message = document.getElementById('text').value.toString();
+        var toUser = message.substring(1, getIndex(message))
+        var message = message.substring(getIndex(message) + 1, message.toString().length)
+        var url=$('#messageUrl').val() + toUser + "/" + message
+        $.ajax({url: url, async: false});
+    }
+
+    //主动断掉close连接后进行重新连接 5s后重新连接
+    function reconnect() {
+        if (lockReconnect) return;
+        lockReconnect = true;
+        //没连接上会一直重连，设置延迟避免请求过多
+        setMessageInnerHTML("将在5s后重新连接");
+        setTimeout(function () {
+            connect();
+            lockReconnect = false;
+        }, 5000);
     }
 
     //将消息显示在网页上
@@ -141,90 +122,44 @@
         message.item(0).remove();
         messageDiv.appendChild(node);
         document.getElementById('message').innerHTML = innerHTML;
-        //
     }
 
-    //关闭连接
     function upOrDownWebSocket() {
-        var state = document.getElementById("state");
-        var status = document.getElementById("status");
-        if (status.innerText == "down") {
-            websocket.close();
-            status.innerText = "up"
-            state.innerText = "offline"
-            state.style.color = "red"
-        } else {
-            if (status.innerText == "up") {
-                if ('WebSocket' in window) {
-                    var userId = document.getElementById("userId").innerText;
-                    websocket = new WebSocket("ws://localhost:9888/ufire-websocket/socket/" + userId);
-                } else {
-                    alert('Not support websocket')
-                }
-                status.innerText = "down"
-            }
-            var state = document.getElementById("state");
-            state.innerText = "online"
-            state.style.color = "green"
+        var status = document.getElementById("status").innerText;
+        if (status == "down") {
+            down()
+        }
+        if (status == "up") {
+            up()
         }
     }
 
-    //发送消息
-    function send() {
 
-        var message = document.getElementById('text').value.toString();
-        var toUser = message.substring(1, getIndex(message))
-        var message = message.substring(getIndex(message) + 1, message.toString().length)
-        xmlhttp.open("GET", "http://websocket.ufiredong.cn/ufire-websocket/websocket/to/" + toUser + "/" + message, true);
-        xmlhttp.send();
+    // 手动 up 连接方法
+    function up() {
+        connect()
     }
 
-    function closeWebSocket() {
-
+    // 手动 down 关闭连接方法
+    function down() {
+        wss.close();
     }
 
-    function uuid2(len, radix) {
-        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
-        var uuid = [],
-            i;
-        radix = radix || chars.length;
+    // 设置按钮状态
+    function setStatus() {
+        if (wss.readyState == 1) {
+            document.getElementById('status').innerText = "down"
+            document.getElementById('state').innerText = "online"
+            document.getElementById('state').style.color = "green"
+            document.getElementById('message').style.color = "green"
 
-        if (len) {
-            // Compact form
-            for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
-        } else {
-            // rfc4122, version 4 form
-            var r;
-
-            // rfc4122 requires these characters
-            uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
-            uuid[14] = '4';
-
-            // Fill in random data.  At i==19 set the high bits of clock sequence as
-            // per rfc4122, sec. 4.1.5
-            for (i = 0; i < 36; i++) {
-                if (!uuid[i]) {
-                    r = 0 | Math.random() * 16;
-                    uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
-                }
-            }
         }
-
-        return uuid.join('');
-    }
-
-    function uuid() {
-        var s = [];
-        var hexDigits = "0123456789abcdef";
-        for (var i = 0; i < 36; i++) {
-            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+        if (wss.readyState == 3) {
+            document.getElementById('status').innerText = "up"
+            document.getElementById('state').innerText = "offline"
+            document.getElementById('state').style.color = "red"
+            document.getElementById('message').style.color = "red"
         }
-        s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
-        s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
-        s[8] = s[13] = s[18] = s[23] = "-";
-
-        var uuid = s.join("");
-        return uuid;
     }
 
     function getIndex(str) {
@@ -234,17 +169,5 @@
             }
         }
     }
-
-
-    function sleep(numberMillis) {
-        var now = new Date();
-        var exitTime = now.getTime() + numberMillis;
-        while (true) {
-            now = new Date();
-            if (now.getTime() > exitTime)
-                return;
-        }
-    }
-
 </script>
 </html>

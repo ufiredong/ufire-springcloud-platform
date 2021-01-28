@@ -193,13 +193,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>websocket分布式集群模拟</title>
+    <title>websocket分布式集群Demo</title>
     <meta charset="UTF-8">
     <title>Test</title>
 </head>
-<div class="container"><a  type="button" onclick="display()" style="color:blue">显示/隐藏</a></div>
+<body>
+<div class="container"><a type="button" onclick="display()" style="color:blue">显示/隐藏</a></div>
 <div id="div1" th:fragment="div1" class="container">
-    <table class="pure-table" style="border-left-style: solid;border-left-width: 0px;margin-left: 100px; display: inline">
+    <table class="pure-table"
+           style="border-left-style: solid;border-left-width: 0px;margin-left: 100px; display: inline">
         <tr>
             <td>
             </td>
@@ -220,13 +222,13 @@
     <table class="pure-table" style="border-left-style: solid;border-left-width: 0px; display: inline">
         <tr>
             <th>ID</th>
-            <th>名称</th>
+            <th>name</th>
             <th>ip</th>
-            <th>端口</th>
-            <th>运行情况</th>
-            <th>状态</th>
-            <th>创建时间</th>
-            <th>操作</th>
+            <th>prot</th>
+            <th>status</th>
+            <th>state</th>
+            <th>createTime</th>
+            <th>operat</th>
         </tr>
         <tr th:each="containerVo:${containerVoList}">
 
@@ -254,8 +256,6 @@
                    style="font-size: 8px;width:60px; height:18px;text-decoration:underline; color:blue" ;>remove
                 </a>
             </td>
-
-
             <!--                <button  class="operat" th:operat= "${containerVo.operat}"  th:cid= "${containerVo.id}" style="font-size: 8px;width:40px; height:18px";  th:if="${containerVo.state eq running }"></button></td>-->
         </tr>
     </table>
@@ -290,8 +290,14 @@
 <script> var jq214 = jQuery.noConflict(true); </script>
 <script>
 
-
     var userIdCount = 0;
+    // var colorMap = new Map();
+    // var colors = new Array()
+    // colors[0] = "#f3d3f2"
+    // colors[1] = "#c3f5c5"
+    // colors[2] = "#efccb4"
+    // colors[3] = "#b1f7f3"
+    // colors[4] = "#b4b4f3"
 
     function add(count) {
         for (var i = 0; i < count; i++) {
@@ -304,7 +310,7 @@
             listItem.id = "user" + userIdCount
             listItem.setAttribute("hostport", "");
             var client = document.createElement("iframe");
-            client.src = "http://websocket.ufiredong.cn/ufire-websocket-ui/websocket/client?userId=user" + userIdCount;
+            client.src = "websocket/client?userId=user" + userIdCount;
             client.frameBorder = "no";
             client.border = "0";
             client.marginheight = 0;
@@ -314,13 +320,6 @@
         }
         reloadAbleJSFn("s3", "http://drag.js.org/demo.min.js")
     }
-
-    // var client = document.getElementsByClassName("listItem")
-    // var Observer = new MutationObserver(function (mutations, instance) {
-    //     console.info("client发生变动了")
-    // });
-    // Observer.observe(client, {
-    // });
 
     function reloadAbleJSFn(id, newJS) {
         var oldjs = null;
@@ -362,7 +361,7 @@
         console.info("id");
         if (confirm("stop?")) {
 
-            jq214('#div1').load("http://websocket.ufiredong.cn/ufire-websocket-ui/websocket/containerList");
+            jq214('#div1').load("websocket/containerList");
         }
 
     }
@@ -382,7 +381,7 @@
     }
 
     function refresh(operation) {
-        jq214('#div1').load("http://websocket.ufiredong.cn/ufire-websocket-ui/websocket/containerList");
+        jq214('#div1').load("websocket/containerList");
     }
 
     function operat(operation) {
@@ -393,14 +392,14 @@
             var cid = jq214('#start').attr("cid");
 
             if (confirm(" 是否开始当前容器 ?")) {
-                jq214('#div1').load("http://websocket.ufiredong.cn/ufire-websocket-ui/websocket/containerList?operat=1&id=" + cid);
+                jq214('#div1').load("websocket/containerList?operat=1&id=" + cid);
             }
         }
         if (operation == "stop") {
             var cid = jq214('#stop').attr("cid");
 
             if (confirm(" 是否停止当前容器 ?")) {
-                jq214('#div1').load("http://websocket.ufiredong.cn/ufire-websocket-ui/websocket/containerList?operat=2&id=" + cid);
+                jq214('#div1').load("websocket/containerList?operat=2&id=" + cid);
             }
 
         }
@@ -408,7 +407,7 @@
             var cid = jq214('#remove').attr("cid");
 
             if (confirm(" 是否删除当前容器 ?")) {
-                jq214('#div1').load("http://websocket.ufiredong.cn/ufire-websocket-ui/containerList?operat=3&id=" + cid);
+                jq214('#div1').load("websocket/containerList?operat=3&id=" + cid);
             }
 
         }
@@ -416,12 +415,11 @@
             var cid = jq214('#remove').attr("cid");
 
             if (confirm(" 是否增加一个新的容器 ?")) {
-                jq214('#div1').load("http://websocket.ufiredong.cn/ufire-websocket-ui/websocket/containerList?operat=4");
+                jq214('#div1').load("websocket/containerList?operat=4");
             }
 
         }
     }
-
 
 </script>
 </html>

@@ -19,4 +19,5 @@ public class ContainerVo {
     private String port;
     private LocalDateTime creatTime;
     private String operat;
+    private Integer userCount;
 }

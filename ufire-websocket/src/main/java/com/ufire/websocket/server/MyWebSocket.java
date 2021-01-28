@@ -1,17 +1,26 @@
 package com.ufire.websocket.server;
+
+import com.alibaba.fastjson.JSON;
 import com.ufire.websocket.conf.HostEntiyConfig;
 import com.ufire.websocket.util.HashRingUtil;
+import com.ufire.websocket.util.LocalDateTimeUtils;
 import com.ufire.websocket.util.SpringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @program: ufire-springcloud-platform
  * @description: X
@@ -22,14 +31,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ServerEndpoint(value = "/socket/{userId}")
 public class MyWebSocket {
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
-    private static AtomicInteger online = new AtomicInteger();
+    public static AtomicInteger online = new AtomicInteger();
 
     //concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。
     private static Map<String, Session> sessionPools = new HashMap<>();
 
-
-
-
+    private static Logger log = LoggerFactory.getLogger(MyWebSocket.class);
 
     /**
      * 发送消息方法
@@ -53,37 +60,46 @@ public class MyWebSocket {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "userId") String userId) {
-        sessionPools.put(userId, session);
-        addOnlineCount();
-        System.out.println(userId + "加入webSocket！当前人数为" + online);
+        Jedis jedis = getJedis();
+        HostEntiyConfig myhost = (HostEntiyConfig) SpringUtil.getBean("myhost");
+        MessageVo messageVo = new MessageVo();
         try {
-            JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
-            Jedis jedis = jedisPool.getResource();
-            System.out.println(session + "欢迎" + userId + "加入连接！");
+            sessionPools.put(userId, session);
+            addOnlineCount();
             int hash = HashRingUtil.getHash(userId);
             jedis.hset("user", String.valueOf(hash), userId);
-            jedis.close();
-            sendMessage(session, SpringUtil.getBean(HostEntiyConfig.class).toString());
+            log.info("{}加入webSocket！当前人数为:{}", userId, online);
+            messageVo.setDateTime(LocalDateTimeUtils.format(LocalDateTime.now()));
+            messageVo.setIp(myhost.toString());
+            messageVo.setType(1);
+            messageVo.setContent("已连接");
+            sendMessage(session, JSON.toJSONString(messageVo));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("{}连接发生异常{}", userId, e.getMessage());
+        } finally {
+            jedis.close();
         }
     }
 
     /**
-     * 关闭连接时调用
+     * TCP长链接close事件时触发
      *
      * @param userId 关闭连接的客户端的userId
      */
     @OnClose
     public void onClose(@PathParam(value = "userId") String userId) {
-        sessionPools.remove(userId);
-        JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
-        int hash=HashRingUtil.getHash(userId);
-        Jedis jedis = jedisPool.getResource();
-        jedis.hdel("user",String.valueOf(hash),userId);
-        jedis.close();
-        subOnlineCount();
-        System.out.println(userId + "断开webSocket连接！当前人数为" + online);
+        Jedis jedis = getJedis();
+        try {
+            sessionPools.remove(userId);
+            int hash = HashRingUtil.getHash(userId);
+            jedis.hdel("user", String.valueOf(hash), userId);
+            subOnlineCount();
+            log.info("{}断开webSocket连接！当前人数为:{}", userId, online);
+        } catch (Exception e) {
+            log.info("{}断开连接发生异常！{}", userId, e.getMessage());
+        } finally {
+            jedis.close();
+        }
     }
 
     /**
@@ -94,8 +110,7 @@ public class MyWebSocket {
      */
     @OnError
     public void onError(Session session, Throwable throwable) {
-
-        System.out.println("发生错误");
+        log.error("发生错误！{}", throwable.getMessage());
         throwable.printStackTrace();
     }
 
@@ -111,7 +126,7 @@ public class MyWebSocket {
         try {
             sendMessage(session, message);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("给指定用户{}发送消息发生异常！{}", userId, e.getMessage());
         }
     }
 
@@ -122,5 +137,11 @@ public class MyWebSocket {
 
     public static void subOnlineCount() {
         online.decrementAndGet();
+    }
+
+    public Jedis getJedis() {
+        JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
+        Jedis jedis = jedisPool.getResource();
+        return jedis;
     }
 }

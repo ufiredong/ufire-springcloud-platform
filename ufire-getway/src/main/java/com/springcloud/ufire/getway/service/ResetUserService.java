@@ -55,7 +55,5 @@ public class ResetUserService {
             // 发送消息
             rabbitResetUserSender.sendOrder(resetUser,resetUser.getRoutingKey());
         }
-
     }
-
 }

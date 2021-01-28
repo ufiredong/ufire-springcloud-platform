@@ -4,12 +4,14 @@ import com.github.dockerjava.api.command.InfoCmd;
 import com.github.dockerjava.api.command.ListContainersCmd;
 import com.github.dockerjava.api.command.ListServicesCmd;
 import com.github.dockerjava.api.model.Service;
+import com.ufire.websocketui.api.WebSocketApi;
 import com.ufire.websocketui.utils.DockerClientUtil;
 import com.ufire.websocketui.utils.LocalDateTimeUtils;
 import com.ufire.websocketui.vo.ContainerVo;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,12 @@ public class IndexController {
     private DockerClient dockerClient;
     @Autowired
     private DockerClientUtil dockerClientUtil;
+    @Value("${app.wssUrl}")
+    private String wssUrl;
+    @Value("${app.messageUrl}")
+    private String messageUrl;
+    @Autowired
+    private WebSocketApi webSocketApi;
 
     @GetMapping("/index")
     public String inedx() {
@@ -39,9 +47,10 @@ public class IndexController {
     }
 
     @GetMapping("/client")
-
     public String client(Model model, String userId) {
         model.addAttribute("userId", userId);
+        model.addAttribute("wssUrl", wssUrl);
+        model.addAttribute("messageUrl", messageUrl);
         return "client";
     }
 
@@ -58,7 +67,7 @@ public class IndexController {
                 dockerClientUtil.removeContainer(dockerClient, id);
             }
             if (operat.equals("4")) {
-                dockerClientUtil.createContainers(dockerClient,"ufire-websocket-"+(int)((Math.random()*9+1)*100000),"ufire-websocket");
+                dockerClientUtil.createContainers(dockerClient, "ufire-websocket-" + (int) ((Math.random() * 9 + 1) * 100000), "ufire-websocket");
             }
         }
         getList(model);

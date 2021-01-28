@@ -18,12 +18,13 @@ spring:
     password: 123456
     driverClassName: com.mysql.jdbc.Driver
   rabbitmq:
-    addresses: 172.18.0.5:5672
+    addresses: 8.136.110.11:5672
     username: guest
     password: guest
     virtual-host: /
 mybatis:
   mapper-locations: classpath：com.springcloud.ufire.core.mapper/*.xml
+
 
 #server:
 #  port: 8885
