@@ -22,6 +22,7 @@
 <p style="display: none">
     <input id="userIdd" th:value="${userId}"/>
     <input id="wssUrl" th:value="${wssUrl}"/>
+    <input id="messageUrl" th:value="${messageUrl}"/>
 </p>
 </body>
 <script type="text/javascript">
@@ -31,6 +32,7 @@
     var userId = null;
     var lockReconnect = false; //避免重复连接
     $(function () {
+        debugger
         userId = $('#userIdd').val();
         document.getElementById('userId').innerText = userId
         connect() // 初始化连接wss
@@ -63,7 +65,6 @@
 
         //接收到消息的回调方法
         wss.onmessage = function (event) {
-
             var message = $.parseJSON(event.data);
             if (message.type == 1) {
                 // if (typeof (window.parent.colorMap.get(message.ip)) == "undefined") {
@@ -93,10 +94,12 @@
 
     // 发送消息 统一从网关进行转发
     function send() {
+        debugger
         var message = document.getElementById('text').value.toString();
         var toUser = message.substring(1, getIndex(message))
         var message = message.substring(getIndex(message) + 1, message.toString().length)
-        $.ajax({url: "http://localhost:9888/ufire-websocket/websocket/to/" + toUser + "/" + message, async: false});
+        var url=$('#messageUrl').val() + toUser + "/" + message
+        $.ajax({url: url, async: false});
     }
 
     //主动断掉close连接后进行重新连接 5s后重新连接

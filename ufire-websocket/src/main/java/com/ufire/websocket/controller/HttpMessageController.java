@@ -1,16 +1,15 @@
 package com.ufire.websocket.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ufire.websocket.server.MessageVo;
 import com.ufire.websocket.server.MyWebSocket;
-import com.ufire.websocket.util.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @program: ufire-springcloud-platform
@@ -28,21 +27,20 @@ public class HttpMessageController {
     @Autowired
     private MyWebSocket myWebSocket;
 
+
+
     @RequestMapping(value = "to/{userId}/{message}")
     public String sendMessage(@PathVariable String userId, @PathVariable String message) {
-        System.out.println(serverPort);
-        // 心跳检查  heartCheck
-        if("heartCheck".equals(message)){
-            myWebSocket.sendInfo(userId, "");
-        }else{
-            myWebSocket.sendInfo(userId, message);
-        }
+        MessageVo messageVo=new MessageVo();
+        messageVo.setContent(message);
+        messageVo.setType(3);
+        myWebSocket.sendInfo(userId, JSON.toJSONString(messageVo));
         return "OK";
     }
-    @RequestMapping(value = "close")
-    public void   close(@RequestParam("userId") String userId){
 
-        myWebSocket.onClose(userId);
+    @RequestMapping(value = "getUserCount")
+    public AtomicInteger getUserCount(){
+        return MyWebSocket.online;
     }
 
 }

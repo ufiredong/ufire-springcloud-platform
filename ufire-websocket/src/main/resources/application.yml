@@ -25,6 +25,7 @@ spring:
 mybatis:
   mapper-locations: classpath：com.springcloud.ufire.core.mapper/*.xml
 
+
 #server:
 #  port: 8885
 #

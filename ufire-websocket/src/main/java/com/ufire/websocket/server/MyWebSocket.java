@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ServerEndpoint(value = "/socket/{userId}")
 public class MyWebSocket {
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
-    private static AtomicInteger online = new AtomicInteger();
+    public static AtomicInteger online = new AtomicInteger();
 
     //concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。
     private static Map<String, Session> sessionPools = new HashMap<>();
