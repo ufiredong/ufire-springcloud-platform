@@ -82,6 +82,7 @@ public class IndexController {
             containerVo.setName(Arrays.asList(container.getNames()).get(0));
             containerVo.setCreatTime(LocalDateTimeUtils.toLocalDateTime(container.getCreated()));
             containerVo.setStatus(container.getStatus());
+
             containerVo.setState(container.getState());
             containerVoList.add(containerVo);
         });

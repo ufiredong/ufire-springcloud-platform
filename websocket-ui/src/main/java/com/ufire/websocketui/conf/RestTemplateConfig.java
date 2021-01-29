@@ -12,10 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
@@ -93,5 +96,19 @@ public class RestTemplateConfig {
                 //重试次数，默认是3次，没有开启
                 .setRetryHandler(new DefaultHttpRequestRetryHandler(2, true))
                 .build();
+    }
+
+
+
+    @Bean
+    public AsyncRestTemplate asyncRestTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        //设置链接超时时间
+        factory.setConnectTimeout(100);
+        //设置读取资料超时时间
+        factory.setReadTimeout(200);
+        //设置异步任务（线程不会重用，每次调用时都会重新启动一个新的线程）
+        factory.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        return new AsyncRestTemplate(factory);
     }
 }
