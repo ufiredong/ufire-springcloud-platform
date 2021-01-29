@@ -51,8 +51,9 @@
             setStatus()
             reconnect()
             var ip = document.getElementById('serverPort').innerText;
-            var id = ip.replace("『", '').replace("』", '').substring(0, ip.indexOf(":"));
-            var td = window.parent.document.getElementById(id.trim().toString())
+            var id = ip.replace("『", '').replace("』", '')
+            var ipid = id.substring(0, ip.indexOf(":")).trim().toString();
+            var td = window.parent.document.getElementById(ipid)
             td.innerText = td.innerText - 1
         }
 
@@ -76,6 +77,7 @@
                 // }
                 console.info("-------------------------成功建立连接")
                 document.getElementById('serverPort').innerText = message.ip
+
                 var ip = message.ip.replace("『", '').replace("』", '');
                 var id = ip.substring(0, ip.indexOf(":"));
                 var td = window.parent.document.getElementById(id.trim().toString())
