@@ -52,7 +52,7 @@
         .container {
             font-size: 12px;
             position: relative;
-            width: 1200px;
+            width: 1400px;
             max-width: 1800px;
             margin: 0 auto;
             background-color: #FFF;
@@ -225,6 +225,7 @@
             <th>name</th>
             <th>ip</th>
             <th>prot</th>
+            <th>userCount</th>
             <th>status</th>
             <th>state</th>
             <th>createTime</th>
@@ -236,6 +237,7 @@
             <td th:text="${containerVo.name}"></td>
             <td th:text="${containerVo.ip}"></td>
             <td th:text="${containerVo.port}"></td>
+            <td th:id="${containerVo.ip}"></td>
             <td th:text="${containerVo.status}"></td>
             <td th:text="${containerVo.state}"></td>
             <td th:text="${containerVo.creatTime}"></td>

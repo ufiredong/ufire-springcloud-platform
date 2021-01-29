@@ -50,6 +50,10 @@
             setMessageInnerHTML("已关闭");
             setStatus()
             reconnect()
+            var ip = document.getElementById('serverPort').innerText;
+            var id = ip.replace("『", '').replace("』", '').substring(0, ip.indexOf(":"));
+            var td = window.parent.document.getElementById(id.trim().toString())
+            td.innerText = td.innerText - 1
         }
 
         //连接发生错误的回调方法
@@ -72,6 +76,10 @@
                 // }
                 console.info("-------------------------成功建立连接")
                 document.getElementById('serverPort').innerText = message.ip
+                var ip = message.ip.replace("『", '').replace("』", '');
+                var id = ip.substring(0, ip.indexOf(":"));
+                var td = window.parent.document.getElementById(id.trim().toString())
+                td.innerText = message.userCount
                 //document.getElementById('serverPort').style.color = window.parent.colorMap.get(message.ip);
                 setStatus()
                 setMessageInnerHTML(message.content);
@@ -98,7 +106,7 @@
         var message = document.getElementById('text').value.toString();
         var toUser = message.substring(1, getIndex(message))
         var message = message.substring(getIndex(message) + 1, message.toString().length)
-        var url=$('#messageUrl').val() + toUser + "/" + message
+        var url = $('#messageUrl').val() + toUser + "/" + message
         $.ajax({url: url, async: false});
     }
 

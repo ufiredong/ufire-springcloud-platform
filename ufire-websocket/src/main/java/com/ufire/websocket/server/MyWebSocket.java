@@ -73,6 +73,7 @@ public class MyWebSocket {
             messageVo.setIp(myhost.toString());
             messageVo.setType(1);
             messageVo.setContent("已连接");
+            messageVo.setUserCount((online));
             sendMessage(session, JSON.toJSONString(messageVo));
         } catch (Exception e) {
             log.error("{}连接发生异常{}", userId, e.getMessage());
