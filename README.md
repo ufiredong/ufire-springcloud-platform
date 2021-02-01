@@ -2,15 +2,15 @@
     学习微服-基于一致性hash算法实现 websocket 分布式集群的尝试。
 ### dmeo
 ### 技术栈
-    nacos 服务发现与注册<br>
-    reids pub sub <br>
-    springboot<br>
-    springcloud getway<br>
-    consistent hash 一致性哈希算法<br>
-    websocket 协议<br>
-    rabbitmq<br>
-    docker-java api<br>
-    nginx<br>
+    nacos 服务发现与注册
+    reids pub sub 
+    springboot
+    springcloud getway
+    consistent hash 一致性哈希算法
+    websocket 协议
+    rabbitmq
+    docker-java api
+    nginx
 ### 为什么websocket的session不能被序列化，不能被共享
         如果我们要搭建一个http服务的集群，我们可以对httpSession进行序列化存到redis中，然后同步到其他服务节点，因为http
     服务是无状态的,即使http 1.1以后有了长连接的概念keep live时间是短暂的，说明http连接不是持久化的，而我们的websocket是
