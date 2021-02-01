@@ -20,16 +20,17 @@
     session并不是维护socket连接的，而websocket的session是用于维护长连接中socket对应关系的，是持久化的，是真实存在的，因
     为socket通信必须是1对1的，所以这种情况下session不能被共享，结合TCP/IP协议会更好理解一点。
 ### 为什么要用consistent hash 一致性哈希算法
-        一致性hash在很多地方都被广泛应用，比如redis集群,sharding jdbc和memorycache中都有被应用，网上大部分websocket的集群方案很多都是基于mq消息队列广播  
-    或者topic模式实现的，这里我们可以参照一致性hash的原理，只要我们能确保每次发送信息或者连接上线都能准确的映射路由到指定的服务节点。具体实现原理请查阅资料  
-    ，不在复述。
+        一致性hash在很多地方都被广泛应用，比如redis集群,sharding jdbc和memorycache中都有被应用，网上大部分websocket的集群
+    方案很多都是基于mq消息队列广播或者topic模式实现的，这里我们可以参照一致性hash的原理，只要我们能确保每次发送信息或者连接
+    上线都能准确的映射路由到指定的服务节点。具体实现原理请查阅资料,不在复述。
 ### 统一入口 nginx
-        nginx 这里作用于服务代理，由于我的 ufire-springcloud-platform 项目整个都在docker容器网络内，目前只有 getway暴露9888端口，这里由nginx代理getway  
-    这样的话，docker微服网络内的服务只能由getway去实现负载路由，不易被入侵，将来我们直接在getway实现鉴权就可以了。
+        nginx 这里作用于服务代理，由于我的 ufire-springcloud-platform 项目整个都在docker容器网络内，目前只有 getway暴露9888
+    端口，这里由nginx代理getway这样的话，docker微服网络内的服务只能由getway去实现负载路由，不易被入侵，将来我们直接在getway实
+    现鉴权就可以了。
 ### 网关 getway
         主要负载http message信息发送  和ws 建立连接。
-    我们新建 ConsistencyChooseRule 重写 choose 方法传入 HashRingConfig 对象，通过 HashRingConfig的getServer(String userId)方法获取userId作为key  
-    该路由到节点,HashRingConfig对象里维护着一个HashRingEntity对象
+    我们新建 ConsistencyChooseRule 重写 choose 方法传入 HashRingConfig 对象，通过 HashRingConfig的getServer(String userId)
+    方法获取userId作为key该路由到节点,HashRingConfig对象里维护着一个HashRingEntity对象。
     具体属性如下:
     <pre>
         <code>
