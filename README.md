@@ -11,6 +11,7 @@
     rabbitmq
     docker-java api
     nginx
+![s](https://github.com/ufiredong/ufire-springcloud-platform/blob/feature/dev/img.png)
 ### 为什么websocket的session不能被序列化，不能被共享
         如果我们要搭建一个http服务的集群，我们可以对httpSession进行序列化存到redis中，然后同步到其他服务节点。因为
      http服务是无状态的,即使http 1.1以后有了长连接的概念keep alive时间是短暂的,说明http连接不是持久化的，而我们的
