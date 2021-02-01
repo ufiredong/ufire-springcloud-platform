@@ -56,10 +56,10 @@
      时都会去CacheB里面找session发消息。也就是说CacheB一但上线，便会影响到CacheC到CacheB之间的用户发送消息。所以我们
      只需要将CacheA断开CacheC到CacheB的用户所对应的session，让客户端重连。
         我们采取的是方案B，这里我利用了rabbitmq topic routingKey 实现的，具体思路如下：
-    我们在新增重启一个websocket服务的时候，自动注册到注册中心之余，自动声明一个queue，reset-queue+ip地址。ip地址是随机
-    的，每个queue和routingKey形成对应关系，这样当我们新上线一个websocket服务的时候，就会更新hashRing 网关是消息生产者，
-    他会通过计算得出哪些user需要重置，会得到一个重置list，这时候我们将需要重新连接的user消息推送到它当前所在的queue，这
-    样我们作为消费端的websocket服务就会监听到要消费的消息，知道哪些user需要重新连接，然后通知webosocket客户端执行
+    我们在新增重启一个websocket服务的时候，自动注册到注册中心之余，自动声明一个queue，reset-queue+ip地址。ip地址是随
+    机的，每个queue和routingKey形成对应关系，这样当我们新上线一个websocket服务的时候，就会更新hashRing 网关是消息生
+    产者他会通过计算得出哪些user需要重置,会得到一个重置list.这时候我们将需要重新连接的user消息推送到它当前所在的queue,
+    这样我们作为消费端的websocket服务就会监听到要消费的消息，知道哪些user需要重新连接，然后通知webosocket客户端执行
     ws.close()关闭掉这条连接，因为有重试机制的存在，web客户端会重新连接到它应当路由到的节点。
 ### 遇到的问题
         一开始,我想利用nacos的上下线功能实现模拟宕机,但是nacos的下线功能，仅仅是把当前服务从websocket微服list中
