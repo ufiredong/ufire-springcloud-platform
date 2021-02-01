@@ -50,15 +50,15 @@
     此时我们有两种解决方案。
     方案A简单，动作大：
         eureka监听到节点UP事件之后，根据现有集群信息，更新哈希环。并且断开所有session连接，让客户端重新连接，此时客户
-     端会连接到更新后的哈希环节点，以此避免消息无法送达的情况。
+    端会连接到更新后的哈希环节点，以此避免消息无法送达的情况。
     方案B复杂，动作小：
         我们先看看没有虚拟节点的情况，假设CacheC和CacheA之间上线了服务器CacheB。所有映射在CacheC到CacheB的用户发消息
-     时都会去CacheB里面找session发消息。也就是说CacheB一但上线，便会影响到CacheC到CacheB之间的用户发送消息。所以我们
-     只需要将CacheA断开CacheC到CacheB的用户所对应的session，让客户端重连。
+    时都会去CacheB里面找session发消息。也就是说CacheB一但上线，便会影响到CacheC到CacheB之间的用户发送消息。所以我们
+    只需要将CacheA断开CacheC到CacheB的用户所对应的session，让客户端重连。
         我们采取的是方案B，这里我利用了rabbitmq topic routingKey 实现的，具体思路如下：
     我们在新增重启一个websocket服务的时候，自动注册到注册中心之余，自动声明一个queue，reset-queue+ip地址。ip地址是随
     机的，每个queue和routingKey形成对应关系，这样当我们新上线一个websocket服务的时候，就会更新hashRing 网关是消息生
-    产者他会通过计算得出哪些user需要重置,会得到一个重置list.这时候我们将需要重新连接的user消息推送到它当前所在的queue,
+    产者他会通过计算得出哪些user需要重置,会得到一个重置list.这时候我们将需要重新连接的user消息推送到它当前所在的queue
     这样我们作为消费端的websocket服务就会监听到要消费的消息，知道哪些user需要重新连接，然后通知webosocket客户端执行
     ws.close()关闭掉这条连接，因为有重试机制的存在，web客户端会重新连接到它应当路由到的节点。
 ### 遇到的问题
