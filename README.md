@@ -3,7 +3,7 @@
     基于jenkins +github hook+docker-compose 实现自动化持续部署。
 ### [demo](http://websocket.ufiredong.cn/ufire-websocket-ui/)
 ### [jenkins](http://jenkins.ufiredong.cn)  user:test password: test
-### [分布式WebSocket集群解决方案](https://www.cnblogs.com/dk1024/p/14015486.html)
+### [转载分布式WebSocket集群解决方案](https://www.cnblogs.com/dk1024/p/14015486.html) 
 ### 技术栈
     nacos 服务发现与注册
     reids pub sub 
