@@ -15,6 +15,11 @@
     docker-java api
     nginx
 ![image](https://github.com/ufiredong/ufire-springcloud-platform/blob/feature/dev/img.png)
+### Demo使用方法
+    1、指定user发送信息，在输入框中输入 @user1：hello 点击send 即可发送。
+    2、宕机模拟 stop当前服务容器即可。
+    3、扩容模拟 新增一个websocket容器 由于容器启动需要时间 可能需要几十秒左右，需要重置的用户将在收到通知之后5s内重新连接。
+    4、由于ecs服务器内存问题，最多只能支持5台websocket容器同时运行。
 ### 为什么websocket的session不能被序列化，不能被共享
         如果我们要搭建一个http服务的集群，我们可以对httpSession进行序列化存到redis中，然后同步到其他服务节点。因为
      http服务是无状态的,即使http 1.1以后有了长连接的概念keep alive时间是短暂的,说明http连接不是持久化的，而我们的
