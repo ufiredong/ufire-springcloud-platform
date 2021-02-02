@@ -1,6 +1,8 @@
 # ufire-springcloud-platform
     学习微服-基于一致性hash算法实现 websocket 分布式集群的尝试。
-### [dmeo](http://websocket.ufiredong.cn/ufire-websocket-ui/)
+### [demo](http://websocket.ufiredong.cn/ufire-websocket-ui/)
+### [jenkins](http://jenkins.ufiredong.cn)  user:test password: test
+### [分布式WebSocket集群解决方案](https://www.cnblogs.com/dk1024/p/14015486.html)
 ### 技术栈
     nacos 服务发现与注册
     reids pub sub 
@@ -11,20 +13,16 @@
     rabbitmq
     docker-java api
     nginx
-![s](https://github.com/ufiredong/ufire-springcloud-platform/blob/feature/dev/img.png)
+![image](https://github.com/ufiredong/ufire-springcloud-platform/blob/feature/dev/img.png)
 ### 为什么websocket的session不能被序列化，不能被共享
         如果我们要搭建一个http服务的集群，我们可以对httpSession进行序列化存到redis中，然后同步到其他服务节点。因为
      http服务是无状态的,即使http 1.1以后有了长连接的概念keep alive时间是短暂的,说明http连接不是持久化的，而我们的
-     websocket是tcp持久化连接，这是一个长连接，websocket在成功建立连接后服务端和客户端内核中分别存在2个socket对象，
-     服务端2个一个负责监听（监听某个端口，将http协议升级为websocket协议）一个socket负责与客户端的socket建立1对1
-     的连接关系 http服务在进行完一次request请求之后除了服务端负责监听的socket还存在负责通信的2个socket随着request
-     请求的结束而被释放。http服务的session并不是维护socket连接的，而websocket的session是用于维护长连接中socket对
-     应关系的是持久化的,是真实存在的。因为socket通信必须是1对1的。所以这种情况下session不能被共享,结合TCP/IP协议会
-     更好理解一点。
-### 为什么要用consistent hash 一致性哈希算法
-        一致性hash在很多地方都被广泛应用，比如redis集群,sharding jdbc和memorycache中都有被应用,网上大部分websocket
-     的集群方案很多都是基于mq消息队列广播或者topic模式实现的，这里我们可以参照一致性hash的原理，只要我们能确保每次发
-     送信息或者连接上线都能准确的映射路由到指定的服务节点。具体实现原理请查阅资料,不在复述。
+     websocket是tcp持久化连接，这是一个长连接，websocket在成功建立连接后服务端存在2个socket对象，客户端存在1个，
+     服务端2个一个负责监听（监听某个端口，将http协议升级为websocket协议）,一个socket负责与客户端的socket建立1对1
+     的连接关系 http服务在进行完一次request请求之后除了服务端负责监听的socket还存在,负责通信的2个socket随着request
+     请求的结束而被释放。http服务的session并不是维护socket连接的，它只是标识与服务的对应关系。而websocket的session
+     是用于维护长连接中socket对应关系的,是持久化的,是真实存在的。因为socket通信必须是1对1的。所以这种情况下session不
+     能被共享,结合TCP/IP协议会更好理解一点。
 ### 统一入口 nginx
         nginx 这里作用于服务代理，由于我的 ufire-springcloud-platform 项目整个都在docker容器网络内,目前只有 getway
      暴露9888端口,这里由nginx代理getway这样的话，docker微服网络内的服务只能由getway去实现负载路由,不易被入侵，将
@@ -43,14 +41,15 @@
                private SortedMap<Integer, String> lastTimeServerMap;
            }
            
-### websocket服务扩容 [分布式WebSocket集群解决方案](https://www.cnblogs.com/dk1024/p/14015486.html)
-        这里推荐大家看一篇博文，我这个项目大体是根据这个博文来实现的.
+        我们需要在getway网关维护一个hash环，当服务节点新增（扩容）或者删除（宕机）及时更新hash环，这里我们通过redis的
+     消息订阅去实现，nacos注册中心检测到up或者down事件之后会推送消息到getway，此时getway本地增加虚拟节点缓存更新hash环。
+### websocket服务扩容 
         既然实现hash一致性,我们在新增websocket服务容器的时候之后，肯定会影响以后连接的路由映射，
         假设websocket CacheB上线了,该服务器的ip地址刚好被映射到key1和cacheA之间。那么key1对应的用户每次要发消息时都
     跑去CacheB发送消息，结果明显是发送不了消息，因为CacheB没有key1对应的session。
     此时我们有两种解决方案。
     方案A简单，动作大：
-        eureka监听到节点UP事件之后，根据现有集群信息，更新哈希环。并且断开所有session连接，让客户端重新连接，此时客户
+        nacos监听到节点UP事件之后，根据现有集群信息，更新哈希环。并且断开所有session连接，让客户端重新连接，此时客户
     端会连接到更新后的哈希环节点，以此避免消息无法送达的情况。
     方案B复杂，动作小：
         我们先看看没有虚拟节点的情况，假设CacheC和CacheA之间上线了服务器CacheB。所有映射在CacheC到CacheB的用户发消息
