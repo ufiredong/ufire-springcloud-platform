@@ -28,9 +28,6 @@ public class GetawayConfig {
     private static final Logger log = LoggerFactory.getLogger(HashRingConfig.class);
 
     @Autowired
-    private JedisPool jedisPool;
-
-    @Autowired
 
     private DiscoveryClient discoveryClient;
 
@@ -47,17 +44,17 @@ public class GetawayConfig {
      */
     @Bean
     public HashRingConfig initHashRingConfig() {
-        log.info("-------------------初始化HashRingConfig对象-----------------");
+//        log.info("-------------------初始化HashRingConfig对象-----------------");
         HashRingConfig hashRingConfig = new HashRingConfig();
-        Jedis jedis = jedisPool.getResource();
-        Map<String, String> serverMap = jedis.hgetAll(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
-        Map<String, String> userMap = jedis.hgetAll(Constants.USER_REDIS_KEY);
-        hashRingConfig.updateHashRing(serverMap, userMap);
-        List<ServiceInstance> instances = discoveryClient.getInstances(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
-        hashRingConfig.setInstances(instances);
-        //增加虚拟节点
-        hashRingConfig.addVirtualNode(hashRingConfig.getHashRing());
-        return hashRingConfig;
+//        Jedis jedis = jedisPool.getResource();
+//        Map<String, String> serverMap = jedis.hgetAll(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
+//        Map<String, String> userMap = jedis.hgetAll(Constants.USER_REDIS_KEY);
+//        hashRingConfig.updateHashRing(serverMap, userMap);
+//        List<ServiceInstance> instances = discoveryClient.getInstances(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
+//        hashRingConfig.setInstances(instances);
+//        //增加虚拟节点
+//        hashRingConfig.addVirtualNode(hashRingConfig.getHashRing());
+       return hashRingConfig;
     }
 
 }
