@@ -21,7 +21,8 @@ spring:
     #      nodes: 8.136.110.11:26379,8.136.110.11:26380,8.136.110.11:26381
     #    password: 123456
   redis:
-    host: 8.136.110.11:6381
+    host: 8.136.110.11
+    port: 6381
     password: 123456
 mybatis:
   mapper-locations: classpath:com.springcloud.ufire.core.mapper/*.xml
