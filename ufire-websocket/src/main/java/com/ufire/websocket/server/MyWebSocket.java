@@ -7,7 +7,10 @@ import com.ufire.websocket.util.LocalDateTimeUtils;
 import com.ufire.websocket.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -38,6 +41,10 @@ public class MyWebSocket {
 
     private static Logger log = LoggerFactory.getLogger(MyWebSocket.class);
 
+    @Autowired
+
+    RedisTemplate redisTemplate;
+
     /**
      * 发送消息方法
      *
@@ -60,14 +67,13 @@ public class MyWebSocket {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "userId") String userId) {
-        Jedis jedis = getJedis();
         HostEntiyConfig myhost = (HostEntiyConfig) SpringUtil.getBean("myhost");
         MessageVo messageVo = new MessageVo();
         try {
             sessionPools.put(userId, session);
             addOnlineCount();
             int hash = HashRingUtil.getHash(userId);
-            jedis.hset("user", String.valueOf(hash), userId);
+            redisTemplate.opsForHash().put("user", String.valueOf(hash), userId);
             log.info("{}加入webSocket！当前人数为:{}", userId, online);
             messageVo.setDateTime(LocalDateTimeUtils.format(LocalDateTime.now()));
             messageVo.setIp(myhost.toString());
@@ -77,8 +83,6 @@ public class MyWebSocket {
             sendMessage(session, JSON.toJSONString(messageVo));
         } catch (Exception e) {
             log.error("{}连接发生异常{}", userId, e.getMessage());
-        } finally {
-            jedis.close();
         }
     }
 
@@ -89,17 +93,14 @@ public class MyWebSocket {
      */
     @OnClose
     public void onClose(@PathParam(value = "userId") String userId) {
-        Jedis jedis = getJedis();
         try {
             sessionPools.remove(userId);
             int hash = HashRingUtil.getHash(userId);
-            jedis.hdel("user", String.valueOf(hash), userId);
+            redisTemplate.opsForHash().delete("user", String.valueOf(hash), userId);
             subOnlineCount();
             log.info("{}断开webSocket连接！当前人数为:{}", userId, online);
         } catch (Exception e) {
             log.info("{}断开连接发生异常！{}", userId, e.getMessage());
-        } finally {
-            jedis.close();
         }
     }
 
@@ -138,11 +139,5 @@ public class MyWebSocket {
 
     public static void subOnlineCount() {
         online.decrementAndGet();
-    }
-
-    public Jedis getJedis() {
-        JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
-        Jedis jedis = jedisPool.getResource();
-        return jedis;
     }
 }
