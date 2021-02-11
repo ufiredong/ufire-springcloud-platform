@@ -1,20 +1,5 @@
 version: "3"
 services:
-  ufire-nacos:
-    image: ufire-nacos
-    container_name: ufire-nacos
-    hostname: ufire-nacos
-    restart: always
-    #指定服务运行的端口
-    ports:
-      - "8848:8848"
-  ufire-redis:
-    image: redis
-    container_name: ufire-redis
-    hostname: ufire-redis
-    #指定服务运行的端口 映射6379到宿主机
-    ports:
-      - "6379:6379"
   ufire-getway:
     image: ufire-getway
     container_name: ufire-getway
@@ -28,21 +13,6 @@ services:
     image: ufire-websocket
     #docker容器名称
     container_name: ufire-websocket-1
-    networks:
-      - network
-    #指定docker域名(分配随机IP)
-  ufire-websocket-2:
-    #docker镜像名称
-    image: ufire-websocket
-    #docker容器名称 随机分配IP
-    container_name: ufire-websocket-2
-    networks:
-      - network
-  ufire-websocket-3:
-    #docker镜像名称
-    image: ufire-websocket
-    #docker容器名称 随机分配IP
-    container_name: ufire-websocket-3
     networks:
       - network
   ufire-websocket-ui:
