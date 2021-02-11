@@ -19,6 +19,4 @@ public class HashRingEntity {
     private SortedMap<Integer, String> userMap;
     // 上次服务节点hash集合
     private SortedMap<Integer, String> lastTimeServerMap;
-    // 本次需要改动的用户hash映射节点hash集合
-    private SortedMap<Integer, String> userMovMap;
 }

@@ -1,4 +1,5 @@
 package com.springcloud.ufire.getway.conf;
+
 import com.springcloud.ufire.core.constant.Constants;
 import com.springcloud.ufire.getway.filter.CustomLoadBalancerClientFilter;
 import com.springcloud.ufire.getway.rule.IChooseRule;
@@ -11,6 +12,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.gateway.config.LoadBalancerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -28,11 +30,11 @@ public class GetawayConfig {
     private static final Logger log = LoggerFactory.getLogger(HashRingConfig.class);
 
     @Autowired
-    private JedisPool jedisPool;
-
-    @Autowired
 
     private DiscoveryClient discoveryClient;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Bean
     public CustomLoadBalancerClientFilter loadBalancerClientFilter(LoadBalancerClient client,
@@ -49,9 +51,8 @@ public class GetawayConfig {
     public HashRingConfig initHashRingConfig() {
         log.info("-------------------初始化HashRingConfig对象-----------------");
         HashRingConfig hashRingConfig = new HashRingConfig();
-        Jedis jedis = jedisPool.getResource();
-        Map<String, String> serverMap = jedis.hgetAll(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
-        Map<String, String> userMap = jedis.hgetAll(Constants.USER_REDIS_KEY);
+        Map serverMap = redisTemplate.opsForHash().entries(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
+        Map userMap = redisTemplate.opsForHash().entries(Constants.USER_REDIS_KEY);
         hashRingConfig.updateHashRing(serverMap, userMap);
         List<ServiceInstance> instances = discoveryClient.getInstances(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
         hashRingConfig.setInstances(instances);
