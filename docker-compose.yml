@@ -19,6 +19,8 @@ services:
     image: ufire-getway
     container_name: ufire-getway
     hostname: ufire-getway
+    networks:
+      - network
     ports:
       - "9888:9888"
   ufire-websocket-1:
@@ -26,25 +28,31 @@ services:
     image: ufire-websocket
     #docker容器名称
     container_name: ufire-websocket-1
+    networks:
+      - network
     #指定docker域名(分配随机IP)
   ufire-websocket-2:
     #docker镜像名称
     image: ufire-websocket
     #docker容器名称 随机分配IP
     container_name: ufire-websocket-2
+    networks:
+      - network
   ufire-websocket-3:
     #docker镜像名称
     image: ufire-websocket
     #docker容器名称 随机分配IP
     container_name: ufire-websocket-3
+    networks:
+      - network
   ufire-websocket-ui:
     #docker镜像名称
     image: ufire-websocket-ui
     #docker容器名称 随机分配IP
     container_name: ufire-websocket-ui
+    networks:
+      - network
 networks:
-  ufire-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.19.0.0/16
+  netwaork:
+    external:
+      name: ufire-network
