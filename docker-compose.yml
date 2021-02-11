@@ -53,6 +53,6 @@ services:
     networks:
       - network
 networks:
-  netwaork:
+  network:
     external:
       name: ufire-network
