@@ -4,6 +4,7 @@ import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.springcloud.ufire.core.constant.Constants;
 import com.springcloud.ufire.core.model.ResetUser;
 import com.springcloud.ufire.getway.conf.HashRingConfig;
+import com.springcloud.ufire.getway.utils.HashRingUtil;
 import com.springcloud.ufire.getway.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,11 @@ public class RedisReceiver {
         List<ServiceInstance> instances = discoveryClient.getInstances(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
         hashRingConfig.setInstances(instances);
         Map userMap = redisTemplate.opsForHash().entries(Constants.USER_REDIS_KEY);
+
+        for(Instance instance:list){
+            String host=instance.getIp()+instance.getPort();
+            int hash = HashRingUtil.getHash(host);
+        }
         Map serverMap = redisTemplate.opsForHash().entries(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
         hashRingConfig.updateHashRing(serverMap, userMap);
         log.info("本次节点变动-虚拟节点插入完毕 {} ", hashRingConfig.getHashRing().getServerMap());
