@@ -34,8 +34,8 @@ spring:
     nacos:
       discovery:
         server-addr: 8.136.110.11:8848
-      config:
-        server-addr: 8.136.110.11:8848 #配置中心地址
-        file-extension: yaml  #指定yaml格式的配置
-        group: DEV_GROUP\
+#      config:
+#        server-addr: 8.136.110.11:8848 #配置中心地址
+#        file-extension: yaml  #指定yaml格式的配置
+#        group: DEV_GROUP\
 

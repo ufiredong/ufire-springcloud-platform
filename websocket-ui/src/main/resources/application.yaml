@@ -14,6 +14,8 @@ spring:
 app:
   wssUrl: ws://websocket.ufiredong.cn/ufire-websocket/socket/
   messageUrl: http://websocket.ufiredong.cn/ufire-websocket/websocket/to/
+#  wssUrl: ws://localhost:9888/ufire-websocket/socket/
+#  messageUrl: http://localhost:9888/ufire-websocket/websocket/to/
 feign:
   client:
     websocket: ufire-webocket

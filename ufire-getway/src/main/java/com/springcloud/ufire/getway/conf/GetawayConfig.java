@@ -39,6 +39,7 @@ public class GetawayConfig {
     @Bean
     public CustomLoadBalancerClientFilter loadBalancerClientFilter(LoadBalancerClient client,
                                                                    LoadBalancerProperties properties,
+                                                                   @Autowired
                                                                    HashRingConfig hashRingConfig,
                                                                    List<IChooseRule> chooseRules) {
         return new CustomLoadBalancerClientFilter(client, properties, hashRingConfig, chooseRules);

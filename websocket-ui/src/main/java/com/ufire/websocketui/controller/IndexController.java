@@ -77,7 +77,7 @@ public class IndexController {
             String id = container.getId().substring(0, 6);
             containerVo.setId(id);
             containerVo.setStatus(container.getStatus());
-            containerVo.setIp(container.getNetworkSettings().getNetworks().get("ufire-springcloud-platform_default").getIpAddress());
+            containerVo.setIp(container.getNetworkSettings().getNetworks().get("ufire-network").getIpAddress());
             containerVo.setPort("80");
             containerVo.setName(Arrays.asList(container.getNames()).get(0));
             containerVo.setCreatTime(LocalDateTimeUtils.toLocalDateTime(container.getCreated()));

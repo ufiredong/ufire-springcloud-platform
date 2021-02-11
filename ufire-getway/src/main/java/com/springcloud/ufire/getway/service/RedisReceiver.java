@@ -49,6 +49,7 @@ public class RedisReceiver {
         }
         Map serverMap = redisTemplate.opsForHash().entries(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
         hashRingConfig.updateHashRing(serverMap, userMap);
+        hashRingConfig.addVirtualNode(hashRingConfig.getHashRing());
         log.info("本次节点变动-虚拟节点插入完毕 {} ", hashRingConfig.getHashRing().getServerMap());
         log.info("上次节点变动 {} ", hashRingConfig.getHashRing().getLastTimeServerMap());
         List<ResetUser> resetUserList = hashRingConfig.getResetUserList();
