@@ -94,7 +94,7 @@ public class MyWebSocket {
         try {
             sessionPools.remove(userId);
             int hash = HashRingUtil.getHash(userId);
-            redisTemplate.opsForHash().delete("user", String.valueOf(hash), userId);
+            redisTemplate.opsForHash().delete("user",String.valueOf(hash));
             subOnlineCount();
             log.info("{}断开webSocket连接！当前人数为:{}", userId, online);
         } catch (Exception e) {
