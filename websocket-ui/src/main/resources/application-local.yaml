@@ -1,0 +1,13 @@
+server:
+  port: 9876
+spring:
+  application:
+    name: ufire-websocket-ui
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+#local 本地
+app:
+  wssUrl: ws://localhost:9888/ufire-websocket/socket/
+  messageUrl: http://localhost:9888/ufire-websocket/websocket/to/

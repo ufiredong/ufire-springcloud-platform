@@ -1,0 +1,13 @@
+server:
+  port: 9876
+spring:
+  application:
+    name: ufire-websocket-ui
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 8.136.110.11:8848
+#prd
+app:
+  wssUrl: ws://websocket.ufiredong.cn/ufire-websocket/socket/
+  messageUrl: http://websocket.ufiredong.cn/ufire-websocket/websocket/to/

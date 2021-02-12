@@ -40,10 +40,6 @@ public class MyWebSocket {
     private static Map<String, Session> sessionPools = new HashMap<>();
 
     private static Logger log = LoggerFactory.getLogger(MyWebSocket.class);
-//
-//    @Autowired
-//
-//    RedisTemplate redisTemplate;
 
     /**
      * 发送消息方法
@@ -69,11 +65,11 @@ public class MyWebSocket {
     public void onOpen(Session session, @PathParam(value = "userId") String userId) {
         HostEntiyConfig myhost = (HostEntiyConfig) SpringUtil.getBean("myhost");
         MessageVo messageVo = new MessageVo();
-        RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         try {
             sessionPools.put(userId, session);
             addOnlineCount();
             int hash = HashRingUtil.getHash(userId);
+            RedisTemplate redisTemplate = (RedisTemplate)SpringUtil.getBean("redisTemplate");
             redisTemplate.opsForHash().put("user", String.valueOf(hash), userId);
             log.info("{}加入webSocket！当前人数为:{}", userId, online);
             messageVo.setDateTime(LocalDateTimeUtils.format(LocalDateTime.now()));

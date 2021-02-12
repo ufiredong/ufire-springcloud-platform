@@ -3,11 +3,6 @@ server:
 spring:
   application:
     name: ufire-websocket
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 8.136.110.11:8848
-#        server-addr: 127.0.0.1:8848
   datasource:
     url: jdbc:mysql://8.136.110.11:3306/rabbitmq?useUnicode=true&characterEncoding=utf-8
     username: root
@@ -18,26 +13,5 @@ spring:
     username: guest
     password: guest
     virtual-host: /
-  redis:
-#    host: 8.136.110.11
-#    port: 6380
-#    password: 123456
-    sentinel:
-      master: mymaster
-      nodes: 172.66.66.22:26379,172.66.66.23:26380,172.66.66.24:26381
-    password: 123456
 mybatis:
   mapper-locations: classpath：com.springcloud.ufire.core.mapper/*.xml
-
-
-#server:
-#  port: 8885
-#
-##添加Thymeleaf配置
-#thymeleaf:
-#  cache: false
-#  prefix: classpath:/templates/
-#  suffix: .html
-#  mode: HTML5
-#  encoding: UTF-8
-#  content-type: text/html
