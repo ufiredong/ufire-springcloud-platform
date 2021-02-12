@@ -40,10 +40,10 @@ public class MyWebSocket {
     private static Map<String, Session> sessionPools = new HashMap<>();
 
     private static Logger log = LoggerFactory.getLogger(MyWebSocket.class);
-
-    @Autowired
-
-    RedisTemplate redisTemplate;
+//
+//    @Autowired
+//
+//    RedisTemplate redisTemplate;
 
     /**
      * 发送消息方法
@@ -69,6 +69,7 @@ public class MyWebSocket {
     public void onOpen(Session session, @PathParam(value = "userId") String userId) {
         HostEntiyConfig myhost = (HostEntiyConfig) SpringUtil.getBean("myhost");
         MessageVo messageVo = new MessageVo();
+        RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         try {
             sessionPools.put(userId, session);
             addOnlineCount();
@@ -93,6 +94,7 @@ public class MyWebSocket {
      */
     @OnClose
     public void onClose(@PathParam(value = "userId") String userId) {
+        RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         try {
             sessionPools.remove(userId);
             int hash = HashRingUtil.getHash(userId);

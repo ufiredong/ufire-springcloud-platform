@@ -34,7 +34,7 @@ public class DockerClientUtil {
     public CreateContainerResponse createContainers(DockerClient client, String containerName, String imageName){
 
         CreateContainerResponse container = client.createContainerCmd(imageName)
-                .withHostConfig(newHostConfig().withNetworkMode("ufire-springcloud-platform_default"))
+                .withHostConfig(newHostConfig().withNetworkMode("ufire-network"))
                 .withName(containerName).exec();
         return container;
 
