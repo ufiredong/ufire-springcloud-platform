@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.ufire.websocket.conf.HostEntiyConfig;
 import com.ufire.websocket.server.MessageVo;
 import com.ufire.websocket.server.MyWebSocket;
+import com.ufire.websocket.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,12 +29,11 @@ public class SendUserCountTask {
     Map<String, Session> sessionPools = MyWebSocket.sessionPools;
     @Autowired
     private MyWebSocket myWebSocket;
-    @Autowired
-    private HostEntiyConfig hostEntiyConfig;
 
     @Scheduled(cron = "0/5 * * * * ? ") // 间隔5秒执行
     public void sendUserCount() {
         log.info("用户数量统计----定时任务开始执行-----");
+        HostEntiyConfig myhost = (HostEntiyConfig) SpringUtil.getBean("myhost");
         Optional<Map.Entry<String, Session>> userSession = sessionPools.entrySet().stream().findFirst();
         userSession.ifPresent(new Consumer<Map.Entry<String, Session>>() {
             @Override
@@ -41,7 +41,7 @@ public class SendUserCountTask {
                 String userId = stringSessionEntry.getKey();
                 MessageVo messageVo = new MessageVo();
                 messageVo.setUserCount(online);
-                messageVo.setIp(hostEntiyConfig.toString());
+                messageVo.setIp(myhost.toString());
                 messageVo.setType(4);
                 myWebSocket.sendInfo(userId, JSON.toJSONString(messageVo));
             }
