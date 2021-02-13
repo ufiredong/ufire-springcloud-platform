@@ -42,11 +42,6 @@ public class RedisReceiver {
         List<ServiceInstance> instances = discoveryClient.getInstances(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
         hashRingConfig.setInstances(instances);
         Map userMap = redisTemplate.opsForHash().entries(Constants.USER_REDIS_KEY);
-
-        for(Instance instance:list){
-            String host=instance.getIp()+instance.getPort();
-            int hash = HashRingUtil.getHash(host);
-        }
         Map serverMap = redisTemplate.opsForHash().entries(Constants.UFIRE_WEBSOCKET_REDIS_KEY);
         hashRingConfig.updateHashRing(serverMap, userMap);
         hashRingConfig.addVirtualNode(hashRingConfig.getHashRing());

@@ -37,7 +37,7 @@ public class MyWebSocket {
     public static AtomicInteger online = new AtomicInteger();
 
     //concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。
-    private static Map<String, Session> sessionPools = new HashMap<>();
+    public static Map<String, Session> sessionPools = new HashMap<>();
 
     private static Logger log = LoggerFactory.getLogger(MyWebSocket.class);
 

@@ -1,12 +1,7 @@
 package com.ufire.websocket.conf;
-
-import com.alibaba.fastjson.JSON;
 import com.springcloud.ufire.core.model.ResetUser;
-import com.ufire.websocket.server.MessageVo;
 import com.ufire.websocket.server.MyWebSocket;
 import com.ufire.websocket.util.IPutil;
-import com.ufire.websocket.util.LocalDateTimeUtils;
-import com.ufire.websocket.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -16,17 +11,16 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import javax.websocket.Session;
+import java.io.IOException;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
-import java.util.UUID;
-
+import java.util.Map;
 @Configuration
 @Slf4j
 public class MqConfig {
     public static final String EXCHANGE = "resetUser-exchange"; // 交换空间名称
-
-    public static  String QUEUE_NAME;
+    Map<String, Session> sessionPools = MyWebSocket.sessionPools;
+    public static String QUEUE_NAME;
 
     static {
         try {
@@ -54,12 +48,19 @@ public class MqConfig {
         return BindingBuilder.bind(queue).to(exchange).with(IPutil.getIp() + ":" + 80);
     }
 
+    /**
+     * 监听到本服务的需要重置的user消息，从sessionPools获取到session
+     * 执行session.close()方法主动断开与websocket客户端的链接
+     *
+     * @param resetUser
+     */
     @RabbitListener(queues = "#{queue.name}")
-    public void receiveMessage(ResetUser resetUser) {    // 通知 客户端 关闭 链接后重新 连接
-        MessageVo messageVo = new MessageVo();
-        messageVo.setType(2);
-        messageVo.setDateTime(LocalDateTimeUtils.format(LocalDateTime.now()));
-        messageVo.setContent("close");
-        myWebSocket.sendInfo(resetUser.getUserId(), JSON.toJSONString(messageVo));
+    public void receiveMessage(ResetUser resetUser) {
+        try {
+            Session session = sessionPools.get(resetUser.getUserId());
+            session.close();
+        } catch (IOException e) {
+            log.error("receiveMessage 发生异常:{}", e.getMessage());
+        }
     }
 }
