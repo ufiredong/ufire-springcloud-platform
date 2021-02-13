@@ -12,8 +12,10 @@ import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * 1、定时任务每隔5s向web端发送一次当前服务内usercount有效用户在线数量
@@ -33,13 +35,17 @@ public class SendUserCountTask {
     public void sendUserCount() {
         log.info("用户数量统计----定时任务开始执行-----");
         Optional<Map.Entry<String, Session>> userSession = sessionPools.entrySet().stream().findFirst();
-        Map.Entry<String, Session> stringSessionEntry = userSession.get();
-        String userId = stringSessionEntry.getKey();
-        MessageVo messageVo = new MessageVo();
-        messageVo.setUserCount(online);
-        messageVo.setIp(hostEntiyConfig.getIp());
-        messageVo.setType(4);
-        myWebSocket.sendInfo(userId, JSON.toJSONString(messageVo));
+        userSession.ifPresent(new Consumer<Map.Entry<String, Session>>() {
+            @Override
+            public void accept(Map.Entry<String, Session> stringSessionEntry) {
+                String userId = stringSessionEntry.getKey();
+                MessageVo messageVo = new MessageVo();
+                messageVo.setUserCount(online);
+                messageVo.setIp(hostEntiyConfig.getIp());
+                messageVo.setType(4);
+                myWebSocket.sendInfo(userId, JSON.toJSONString(messageVo));
+            }
+        });
         log.info("当前服务用户数量:{}", online);
         log.info("用户数量统计----定时任务执行结束-----");
     }
