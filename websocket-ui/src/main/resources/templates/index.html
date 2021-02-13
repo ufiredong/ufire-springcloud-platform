@@ -268,13 +268,13 @@
             <div class="section">
                 <div class="center">
 
-                    <div class="centerItem listContainer" id="2222">
+                    <div class="centerItem listContainer" >
                     </div>
-                    <div class="centerItem listContainer" id="3333">
+                    <div class="centerItem listContainer" >
                     </div>
-                    <div class="centerItem listContainer" id="4444">
+                    <div class="centerItem listContainer" >
                     </div>
-                    <div class="centerItem listContainer" id="5555">
+                    <div class="centerItem listContainer" >
                     </div>
                     <div class="centerItem listContainer" id="default" style="display: none">
                     </div>
@@ -338,29 +338,6 @@
         document.getElementsByTagName("head")[0].appendChild(scriptObj)
     }
 
-
-    function group() {
-        var clientList = document.getElementsByClassName("listItem")
-        var div5555 = document.getElementById("5555")
-        var div4444 = document.getElementById("4444")
-        var div3333 = document.getElementById("3333")
-        var div2222 = document.getElementById("2222")
-        for (var i = 0; i < clientList.length; i++) {
-            var client = clientList.item(i)
-            if (client.getAttribute("hostport").indexOf("5555") != -1) {
-                div5555.appendChild(client)
-            }
-            if (client.getAttribute("hostport").indexOf("4444") != -1) {
-                div4444.appendChild(client)
-            }
-            if (client.getAttribute("hostport").indexOf("3333") != -1) {
-                div3333.appendChild(client)
-            }
-            if (client.getAttribute("hostport").indexOf("2222") != -1) {
-                div2222.appendChild(client)
-            }
-        }
-    }
 
     function start(id) {
         console.info("id");
