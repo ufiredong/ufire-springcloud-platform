@@ -90,7 +90,7 @@ public class MyWebSocket {
      */
     @OnClose
     public void onClose(@PathParam(value = "userId") String userId) {
-        RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
+        RedisTemplate redisTemplate = (RedisTemplate)SpringUtil.getBean("redisTemplate");
         try {
             sessionPools.remove(userId);
             int hash = HashRingUtil.getHash(userId);
