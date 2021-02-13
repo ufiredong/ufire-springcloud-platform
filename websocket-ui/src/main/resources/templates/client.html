@@ -91,7 +91,7 @@
             }
             if (message.type == 4) {
                 document.getElementById('serverPort').innerText = message.ip
-                var ip = message.ip.replace("『", '').replace("』", '');
+                var ip = message.ip;
                 var id = ip.substring(0, ip.indexOf(":"));
                 var td = window.parent.document.getElementById(id.trim().toString())
                 td.innerText = message.userCount

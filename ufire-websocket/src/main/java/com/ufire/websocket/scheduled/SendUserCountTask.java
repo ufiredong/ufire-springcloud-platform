@@ -41,7 +41,7 @@ public class SendUserCountTask {
                 String userId = stringSessionEntry.getKey();
                 MessageVo messageVo = new MessageVo();
                 messageVo.setUserCount(online);
-                messageVo.setIp(hostEntiyConfig.getIp());
+                messageVo.setIp(hostEntiyConfig.getIp()+":"+hostEntiyConfig.getPort());
                 messageVo.setType(4);
                 myWebSocket.sendInfo(userId, JSON.toJSONString(messageVo));
             }
