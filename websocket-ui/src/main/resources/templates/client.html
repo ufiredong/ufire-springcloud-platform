@@ -32,7 +32,6 @@
     var userId = null;
     var lockReconnect = false; //避免重复连接
     $(function () {
-        debugger
         userId = $('#userIdd').val();
         document.getElementById('userId').innerText = userId
         connect() // 初始化连接wss
@@ -107,7 +106,6 @@
 
     // 发送消息 统一从网关进行转发
     function send() {
-        debugger
         var message = document.getElementById('text').value.toString();
         var toUser = message.substring(1, getIndex(message))
         var message = message.substring(getIndex(message) + 1, message.toString().length)

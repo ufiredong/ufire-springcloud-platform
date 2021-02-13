@@ -44,6 +44,7 @@ public class SendUserCountTask {
                 messageVo.setIp(myhost.toString());
                 messageVo.setType(4);
                 myWebSocket.sendInfo(userId, JSON.toJSONString(messageVo));
+                log.info("向{}发送信息:{}", userId, JSON.toJSONString(messageVo));
             }
         });
         log.info("当前服务用户数量:{}", online);
