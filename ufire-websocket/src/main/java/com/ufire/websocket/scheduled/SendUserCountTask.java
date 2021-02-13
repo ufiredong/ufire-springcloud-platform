@@ -1,0 +1,47 @@
+package com.ufire.websocket.scheduled;
+
+
+import com.alibaba.fastjson.JSON;
+import com.ufire.websocket.conf.HostEntiyConfig;
+import com.ufire.websocket.server.MessageVo;
+import com.ufire.websocket.server.MyWebSocket;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import javax.websocket.Session;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * 1、定时任务每隔5s向web端发送一次当前服务内usercount有效用户在线数量
+ * 2、获取当前sessionPool内第一个有效的用户发送信息
+ */
+@Component
+@Slf4j
+public class SendUserCountTask {
+    public static AtomicInteger online = new AtomicInteger();
+    Map<String, Session> sessionPools = MyWebSocket.sessionPools;
+    @Autowired
+    private MyWebSocket myWebSocket;
+    @Autowired
+    private HostEntiyConfig hostEntiyConfig;
+
+    @Scheduled(cron = "0/5 * * * * ? ") // 间隔5秒执行
+    public void sendUserCount() {
+        log.info("用户数量统计----定时任务开始执行-----");
+        Optional<Map.Entry<String, Session>> userSession = sessionPools.entrySet().stream().findFirst();
+        Map.Entry<String, Session> stringSessionEntry = userSession.get();
+        String userId = stringSessionEntry.getKey();
+        MessageVo messageVo = new MessageVo();
+        messageVo.setUserCount(online);
+        messageVo.setIp(hostEntiyConfig.getIp());
+        messageVo.setType(4);
+        myWebSocket.sendInfo(userId, JSON.toJSONString(messageVo));
+        log.info("当前服务用户数量:{}", online);
+        log.info("用户数量统计----定时任务执行结束-----");
+    }
+
+}

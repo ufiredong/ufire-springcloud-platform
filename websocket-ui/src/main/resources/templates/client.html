@@ -50,11 +50,6 @@
             setMessageInnerHTML("已关闭");
             setStatus()
             reconnect()
-            var ip = document.getElementById('serverPort').innerText;
-            var id = ip.replace("『", '').replace("』", '')
-            var ipid = id.substring(0, ip.indexOf(":")).trim().toString();
-            var td = window.parent.document.getElementById(ipid)
-            td.innerText = td.innerText - 1
         }
 
         //连接发生错误的回调方法
@@ -92,6 +87,12 @@
             }
             if (message.type == 3) {
                 console.info("-------------------------通信")
+                setMessageInnerHTML(message.content);
+            }
+            if (message.type == 4) {
+                var td = window.parent.document.getElementById(id.trim().toString())
+                td.innerText = message.userCount
+                console.info("-------------------------定时统计用户数量")
                 setMessageInnerHTML(message.content);
             }
         }
