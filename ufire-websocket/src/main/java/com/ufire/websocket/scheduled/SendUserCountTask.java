@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 @Component
 @Slf4j
 public class SendUserCountTask {
-    public static AtomicInteger online = new AtomicInteger();
+    public static AtomicInteger online = MyWebSocket.online;
     Map<String, Session> sessionPools = MyWebSocket.sessionPools;
     @Autowired
     private MyWebSocket myWebSocket;
