@@ -8,6 +8,7 @@
 ### 技术栈
     nacos 服务发现与注册
     redis pub sub 
+    redis sentinel
     springboot
     thmyleaf
     springcloud getway
