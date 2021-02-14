@@ -2,6 +2,7 @@
         基于一致性hash算法实现websocket分布式集群的尝试，提供模拟宕机演示解决单点故障demo，实现websocket服务的扩容。
     基于jenkins +github hook+docker-compose 实现自动化持续部署。
 ### [demo](http://websocket.ufiredong.cn/ufire-websocket-ui/)
+### [logs](http://logs.ufiredong.cn/ufire-websocket-ui/)
 ### [jenkins](http://jenkins.ufiredong.cn)  user:test password: test
 ### [转载分布式WebSocket集群解决方案](https://www.cnblogs.com/dk1024/p/14015486.html) 
 ### 技术栈
