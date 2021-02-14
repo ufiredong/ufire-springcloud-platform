@@ -7,8 +7,9 @@
 ### [转载分布式WebSocket集群解决方案](https://www.cnblogs.com/dk1024/p/14015486.html) 
 ### 技术栈
     nacos 服务发现与注册
-    reids pub sub 
+    redis pub sub 
     springboot
+    thmyleaf
     springcloud getway
     consistent hash 一致性哈希算法
     websocket 协议
