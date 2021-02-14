@@ -15,6 +15,8 @@
     websocket 协议
     rabbitmq
     docker-java api
+    docker-compose
+    jenkins
     nginx
 ![image](https://github.com/ufiredong/ufire-springcloud-platform/blob/feature/dev/img.png)
 ### Demo使用方法
