@@ -20,6 +20,7 @@
     jenkins
     nginx
 ![image](https://github.com/ufiredong/ufire-springcloud-platform/blob/feature/dev/img.png)
+![SSS](https://d33wubrfki0l68.cloudfront.net/0b083601ff91e92712019fa58facb09e22501fac/7a995/build/screenshots/spfk-688461139f.jpeg)
 ### Demo使用方法
     1、指定user发送信息，在输入框中输入 @user1：hello 点击send 即可发送。
     2、宕机模拟 stop当前服务容器即可。
