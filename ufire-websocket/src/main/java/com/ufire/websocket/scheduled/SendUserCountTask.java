@@ -32,7 +32,7 @@ public class SendUserCountTask {
 
     @Scheduled(cron = "0/5 * * * * ? ") // 间隔5秒执行
     public void sendUserCount() {
-        log.info("用户数量统计----定时任务开始执行-----");
+//        /log.info("用户数量统计----定时任务开始执行-----");
         HostEntiyConfig myhost = (HostEntiyConfig) SpringUtil.getBean("myhost");
         Optional<Map.Entry<String, Session>> userSession = sessionPools.entrySet().stream().findFirst();
         userSession.ifPresent(new Consumer<Map.Entry<String, Session>>() {
@@ -44,11 +44,11 @@ public class SendUserCountTask {
                 messageVo.setIp(myhost.toString());
                 messageVo.setType(4);
                 myWebSocket.sendInfo(userId, JSON.toJSONString(messageVo));
-                log.info("向{}发送信息:{}", userId, JSON.toJSONString(messageVo));
+//                log.info("向{}发送信息:{}", userId, JSON.toJSONString(messageVo));
             }
         });
-        log.info("当前服务用户数量:{}", online);
-        log.info("用户数量统计----定时任务执行结束-----");
+//        log.info("当前服务用户数量:{}", online);
+//        log.info("用户数量统计----定时任务执行结束-----");
     }
 
 }

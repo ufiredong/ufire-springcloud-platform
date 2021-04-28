@@ -17,10 +17,14 @@ spring:
     username: guest
     password: guest
     virtual-host: /
+#  redis:
+#    sentinel:
+#      master: mymaster
+#      nodes: 172.66.66.22:26379,172.66.66.23:26380,172.66.66.24:26381
+#    password: 123456
   redis:
-    sentinel:
-      master: mymaster
-      nodes: 172.66.66.22:26379,172.66.66.23:26380,172.66.66.24:26381
+    host: 8.136.110.11
+    port: 6380
     password: 123456
 mybatis:
   mapper-locations: classpath：com.springcloud.ufire.core.mapper/*.xml
