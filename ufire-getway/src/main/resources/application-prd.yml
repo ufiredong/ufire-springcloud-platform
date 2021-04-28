@@ -21,6 +21,7 @@ spring:
     sentinel:
       master: mymaster
       nodes: 172.66.66.22:26379,172.66.66.23:26380,172.66.66.24:26381
+      #nodes: 8.136.110.11:26379,8.136.110.11:26380,8.136.110.11:26381
     password: 123456
 mybatis:
   mapper-locations: classpath:com.springcloud.ufire.core.mapper/*.xml
