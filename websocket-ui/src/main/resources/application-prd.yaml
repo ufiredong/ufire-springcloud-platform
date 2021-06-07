@@ -6,7 +6,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 172.66.66.66:8848
+        server-addr: 8.136.110.11:8848
 #prd
 app:
   wssUrl: ws://websocket.ufiredong.cn/ufire-websocket/socket/
