@@ -1,6 +1,6 @@
 # ufire-springcloud-platform
         基于一致性hash算法实现websocket分布式集群的尝试，提供模拟宕机演示解决单点故障demo，实现websocket服务的扩容。
-    基于jenkins +github hook+docker-compose 实现自动化持续部署。
+    基于jenkins +github hook+docker-compose 实现自动化持续部署 。
 ### [demo](http://websocket.ufiredong.cn/ufire-websocket-ui/)
 ### [logs](http://logs.ufiredong.cn)
 ### [jenkins](http://jenkins.ufiredong.cn)  user:test password: test
