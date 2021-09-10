@@ -215,7 +215,7 @@
             </td>
         </tr>
         <tr>
-            <td><a type="button" onclick="add(1)" style="color:blue">新增websocket客户端</a>
+            <td><a type="button" onclick="add(guid())" style="color:blue">新增websocket客户端</a>
             </td>
         </tr>
     </table>
@@ -303,9 +303,15 @@
     // colors[2] = "#efccb4"
     // colors[3] = "#b1f7f3"
     // colors[4] = "#b4b4f3"
+    function guid() {
+        return 'xxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+                v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
 
-    function add(count) {
-        for (var i = 0; i < count; i++) {
+    function add(userId) {
             var divlist = document.getElementsByClassName("centerItem listContainer");
             var path = Math.floor(Math.random() * (4 - 0) + 0);
             var div = divlist.item(path);
@@ -315,14 +321,12 @@
             listItem.id = "user" + userIdCount
             listItem.setAttribute("hostport", "");
             var client = document.createElement("iframe");
-            client.src = "websocket/client?userId=user" + userIdCount;
+            client.src = "websocket/client?userId=user" + userId;
             client.frameBorder = "no";
             client.border = "0";
             client.marginheight = 0;
             listItem.appendChild(client);
             div.appendChild(listItem)
-            userIdCount++;
-        }
         reloadAbleJSFn("s3", "http://drag.js.org/demo.min.js")
     }
 
