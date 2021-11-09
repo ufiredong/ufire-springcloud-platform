@@ -39,9 +39,9 @@
      是用于维护长连接中socket对应关系的,是持久化的,是真实存在的。因为socket通信必须是1对1的。所以这种情况下session不
      能被共享,结合TCP/IP协议会更好理解一点。
 ### 统一入口 nginx
-        nginx 这里作用于服务代理，由于我的 ufire-springcloud-platform 项目整个都在docker容器网络内,目前只有 getway
-     暴露9888端口,这里由nginx代理getway这样的话，docker微服网络内的服务只能由getway去实现负载路由,不易被入侵，将
-     来我们直接在getway实现鉴权就可以了。
+        nginx 这里作用于服务代理，由于我的 ufire-springcloud-platform 项目整个都在docker容器网络内,目前只有 gateway
+     暴露9888端口,这里由nginx代理getway这样的话，docker微服网络内的服务只能由gateway去实现负载路由,不易被入侵，将
+     来我们直接在gateway实现鉴权就可以了。
 ### 网关 getway
         主要负载http message信息发送和ws建立连接。
     我们新建 ConsistencyChooseRule重写choose 方法传入 HashRingConfig 对象，通过 HashRingConfig的getServer(String userId)
@@ -56,8 +56,8 @@
                private SortedMap<Integer, String> lastTimeServerMap;
            }
            
-        我们需要在getway网关维护一个hash环，当服务节点新增（扩容）或者删除（宕机）及时更新hash环，这里我们通过redis的
-     消息订阅去实现，nacos注册中心检测到up或者down事件之后会推送消息到getway，此时getway本地增加虚拟节点缓存更新hash环。
+        我们需要在gateway网关维护一个hash环，当服务节点新增（扩容）或者删除（宕机）及时更新hash环，这里我们通过redis的
+     消息订阅去实现，nacos注册中心检测到up或者down事件之后会推送消息到gateway，此时getway本地增加虚拟节点缓存更新hash环。
 ### websocket服务扩容 
         既然实现hash一致性,我们在新增websocket服务容器的时候之后，肯定会影响以后连接的路由映射，
         假设websocket CacheB上线了,该服务器的ip地址刚好被映射到key1和cacheA之间。那么key1对应的用户每次要发消息时都
